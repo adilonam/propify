@@ -2,28 +2,51 @@
 
 import * as React from "react"
 import { Menu, X } from "lucide-react"
+import { useSession } from "next-auth/react"
 
-import { Button } from "@/components/ui/button"
 import { Logo } from "@/components/propify/logo"
+import { HeaderAuth } from "@/components/propify/header-auth"
 import { cn } from "@/lib/utils"
 
-const NAV_LINKS = [
+const PUBLIC_NAV_LINKS = [
   { href: "#accueil", label: "Accueil" },
   { href: "#challenges", label: "Challenges" },
-  { href: "#dashboard", label: "Dashboard" },
   { href: "#confiance", label: "Confiance" },
   { href: "#faq", label: "FAQ" },
   { href: "#contact", label: "Contact" },
 ] as const
 
+const DASHBOARD_NAV_LINK = {
+  href: "#dashboard",
+  label: "Dashboard",
+} as const
+
+function getNavLinks(isAuthenticated: boolean) {
+  if (!isAuthenticated) {
+    return [...PUBLIC_NAV_LINKS]
+  }
+
+  return [
+    PUBLIC_NAV_LINKS[0],
+    PUBLIC_NAV_LINKS[1],
+    DASHBOARD_NAV_LINK,
+    ...PUBLIC_NAV_LINKS.slice(2),
+  ]
+}
+
 export function Header() {
+  const { data: session } = useSession()
+  const navLinks = React.useMemo(
+    () => getNavLinks(Boolean(session?.user)),
+    [session?.user]
+  )
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [active, setActive] = React.useState("accueil")
 
   React.useEffect(() => {
-    const sections = NAV_LINKS.map((l) =>
-      document.querySelector(l.href.replace("#", "#"))
-    ).filter(Boolean) as HTMLElement[]
+    const sections = navLinks
+      .map((l) => document.querySelector(l.href))
+      .filter(Boolean) as HTMLElement[]
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -41,7 +64,7 @@ export function Header() {
     }
 
     return () => observer.disconnect()
-  }, [])
+  }, [navLinks])
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-md">
@@ -51,7 +74,7 @@ export function Header() {
         </a>
 
         <div className="hidden items-center gap-6 lg:flex">
-          {NAV_LINKS.map((link) => (
+          {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
@@ -67,11 +90,8 @@ export function Header() {
           ))}
         </div>
 
-        <div className="hidden items-center gap-3 md:flex">
-          <Button variant="ghost" className="px-4 py-2">
-            Se connecter
-          </Button>
-          <Button>Commencer</Button>
+        <div className="hidden md:block">
+          <HeaderAuth />
         </div>
 
         <button
@@ -87,7 +107,7 @@ export function Header() {
       {mobileOpen && (
         <div className="border-t border-white/10 px-4 py-4 md:hidden">
           <div className="flex flex-col gap-3">
-            {NAV_LINKS.map((link) => (
+            {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
@@ -97,9 +117,8 @@ export function Header() {
                 {link.label}
               </a>
             ))}
-            <div className="mt-2 flex flex-col gap-2">
-              <Button variant="ghost">Se connecter</Button>
-              <Button>Commencer</Button>
+            <div className="mt-2">
+              <HeaderAuth onNavigate={() => setMobileOpen(false)} />
             </div>
           </div>
         </div>

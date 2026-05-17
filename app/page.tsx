@@ -1,3 +1,4 @@
+import { auth } from "@/auth"
 import { Header } from "@/components/propify/header"
 import { ChallengesSection } from "@/components/sections/challenges"
 import { DashboardPreviewSection } from "@/components/sections/dashboard-preview"
@@ -9,7 +10,9 @@ import { StatsBarSection } from "@/components/sections/stats-bar"
 import { TrustSection } from "@/components/sections/trust"
 import { WhyPropifySection } from "@/components/sections/why-propify"
 
-export default function Page() {
+export default async function Page() {
+  const session = await auth()
+
   return (
     <>
       <Header />
@@ -19,11 +22,11 @@ export default function Page() {
         <KeyInfoSection />
         <ChallengesSection />
         <WhyPropifySection />
-        <DashboardPreviewSection />
+        {session?.user ? <DashboardPreviewSection /> : null}
         <TrustSection />
         <FaqSection />
       </main>
-      <Footer />
+      <Footer isAuthenticated={Boolean(session?.user)} />
     </>
   )
 }

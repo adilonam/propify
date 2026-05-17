@@ -10,7 +10,17 @@ const FOOTER_LINKS = {
   ],
 } as const
 
-export function Footer() {
+export function Footer({
+  isAuthenticated = false,
+}: {
+  isAuthenticated?: boolean
+}) {
+  const footerLinks = {
+    ...FOOTER_LINKS,
+    Plateforme: isAuthenticated
+      ? FOOTER_LINKS.Plateforme
+      : FOOTER_LINKS.Plateforme.filter((link) => link !== "Dashboard"),
+  }
   return (
     <footer
       id="contact"
@@ -25,7 +35,7 @@ export function Footer() {
           </p>
         </div>
 
-        {Object.entries(FOOTER_LINKS).map(([title, links]) => (
+        {Object.entries(footerLinks).map(([title, links]) => (
           <div key={title} className="space-y-4">
             <h4 className="font-label text-xs font-bold tracking-widest text-on-surface uppercase">
               {title}

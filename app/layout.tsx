@@ -1,6 +1,7 @@
 import { Hanken_Grotesk, Inter, JetBrains_Mono } from "next/font/google"
 
 import "./globals.css"
+import { AuthSessionProvider } from "@/components/auth/session-provider"
 import { ThemeProvider } from "@/components/theme-provider"
 
 const inter = Inter({
@@ -42,7 +43,7 @@ export default function RootLayout({
         className={`${inter.variable} ${hanken.variable} ${jetbrains.variable} font-sans`}
       >
         <ThemeProvider defaultTheme="dark" forcedTheme="dark">
-          {children}
+          <AuthSessionProvider>{children}</AuthSessionProvider>
         </ThemeProvider>
       </body>
     </html>
