@@ -1,0 +1,28 @@
+{
+  "name": "Propify Next.js + Postgres",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/propify",
+  "remoteUser": "node",
+  "postCreateCommand": "corepack enable && corepack prepare pnpm@latest --activate && pnpm install",
+  "forwardPorts": [3000, 5432],
+  "portsAttributes": {
+    "3000": {
+      "label": "Next.js dev server",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "Prisma.prisma"
+      ]
+    }
+  }
+}
