@@ -1,17 +1,30 @@
-import { Geist, Geist_Mono } from "next/font/google"
+import { Hanken_Grotesk, Inter, JetBrains_Mono } from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 
-const fontSans = Geist({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-inter",
 })
 
-const fontMono = Geist_Mono({
+const hanken = Hanken_Grotesk({
   subsets: ["latin"],
-  variable: "--font-mono",
+  variable: "--font-hanken",
+  weight: ["600", "700", "800"],
 })
+
+const jetbrains = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains",
+  weight: ["500"],
+})
+
+export const metadata = {
+  title: "PROPIFY | Trade Smarter. Scale Faster.",
+  description:
+    "Challenges clairs, règles visibles, récompenses jusqu'à 90%. Une expérience premium qui inspire confiance.",
+}
 
 export default function RootLayout({
   children,
@@ -20,12 +33,17 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="fr"
+      className="dark"
       suppressHydrationWarning
-      className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}
+      style={{ colorScheme: "dark" }}
     >
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
+      <body
+        className={`${inter.variable} ${hanken.variable} ${jetbrains.variable} font-sans`}
+      >
+        <ThemeProvider defaultTheme="dark" forcedTheme="dark">
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )

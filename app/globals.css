@@ -1,1 +1,59 @@
 @import "tailwindcss";
+
+@theme inline {
+  --color-background: #05080d;
+  --color-surface: #121414;
+  --color-surface-container: #0e1521;
+  --color-surface-container-high: #1a1f2e;
+  --color-surface-container-highest: #252b3a;
+  --color-primary: #4a8eff;
+  --color-primary-dim: #adc7ff;
+  --color-on-surface: #e2e2e2;
+  --color-on-surface-variant: #c1c6d7;
+  --color-on-primary-container: #00285b;
+  --color-secondary-fixed: #60ff99;
+  --color-outline-variant: #414754;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --spacing-container-max: 1280px;
+  --spacing-section: 5rem;
+  --spacing-gutter: 1.5rem;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-on-surface antialiased;
+    background-image: radial-gradient(
+      circle at 80% 10%,
+      rgba(74, 142, 255, 0.12) 0%,
+      transparent 45%
+    );
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    background: rgba(14, 21, 33, 0.7);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-label {
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+  }
+}
