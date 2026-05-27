@@ -22,7 +22,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - postgres-data-propify:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d propify"]
       interval: 5s
@@ -30,4 +30,4 @@ services:
       retries: 10
 
 volumes:
-  postgres-data:
+  postgres-data-propify:
