@@ -77,7 +77,7 @@ export function WhyPropifySection() {
               </li>
             ))}
           </ul>
-          <div className="border-t border-white/10 pt-6 text-center">
+          <div className="border-t border-outline-variant pt-6 text-center">
             <div className="font-bold text-on-surface">Excellent ★★★★★</div>
             <div className="font-label text-sm text-on-surface-variant">
               Basé sur 2,500+ avis
@@ -86,7 +86,7 @@ export function WhyPropifySection() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-between gap-8 rounded-2xl border-2 border-primary bg-primary/5 p-8 md:flex-row md:p-12">
+      <div className="flex flex-col items-center justify-between gap-8 rounded-2xl border-2 border-primary bg-surface-container p-8 md:flex-row md:p-12">
         <div className="space-y-2">
           <h2 className="font-heading text-2xl font-semibold text-white">
             Le luxe = clarté + espace + confiance
@@ -96,7 +96,7 @@ export function WhyPropifySection() {
             chiffres et les règles beaucoup plus visibles.
           </p>
         </div>
-        <Button className="shrink-0 px-12 py-4 shadow-xl shadow-primary/20">
+        <Button className="shrink-0 px-12 py-4">
           Commencer
         </Button>
       </div>

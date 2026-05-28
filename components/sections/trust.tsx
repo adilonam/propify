@@ -53,11 +53,11 @@ export function TrustSection() {
         </h3>
 
         <div className="relative">
-          <div className="absolute top-5 right-0 left-0 hidden h-0.5 bg-white/10 md:block" />
+          <div className="absolute top-5 right-0 left-0 hidden h-0.5 bg-outline-variant md:block" />
           <ol className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
             {STEPS.map((step, index) => (
               <li key={step} className="relative flex flex-col items-center text-center">
-                <div className="relative z-10 flex size-10 items-center justify-center rounded-full border-2 border-white/30 bg-primary font-heading text-sm font-bold text-on-primary-container">
+                <div className="relative z-10 flex size-10 items-center justify-center rounded-full border-2 border-outline-variant bg-primary font-heading text-sm font-bold text-on-primary-container glow-blue">
                   {index + 1}
                 </div>
                 <p className="mt-4 font-label text-sm text-on-surface">{step}</p>

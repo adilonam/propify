@@ -9,7 +9,7 @@ const STATS = [
 
 export function StatsBarSection() {
   return (
-    <section className="glass-card grid grid-cols-2 gap-6 rounded-2xl px-6 py-8 md:grid-cols-4 md:divide-x md:divide-white/10">
+    <section className="glass-card grid grid-cols-2 gap-6 rounded-2xl px-6 py-8 md:grid-cols-4 md:divide-x md:divide-outline-variant">
       {STATS.map((stat) => (
         <div
           key={stat.label}

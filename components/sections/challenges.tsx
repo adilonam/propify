@@ -143,7 +143,7 @@ export function ChallengesSection() {
         </p>
 
         <div className="flex justify-center pt-4">
-          <div className="inline-flex rounded-lg border border-white/10 bg-surface-container-highest p-1">
+          <div className="inline-flex rounded-lg border border-outline-variant bg-surface-container-highest p-1">
             {(["2-step", "1-step"] as const).map((option) => (
               <button
                 key={option}

@@ -66,8 +66,8 @@ export function DashboardPreviewSection() {
             >
               <defs>
                 <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#4a8eff" stopOpacity="0.3" />
-                  <stop offset="100%" stopColor="#4a8eff" stopOpacity="0" />
+                  <stop offset="0%" stopColor="#007BFF" stopOpacity="0.32" />
+                  <stop offset="100%" stopColor="#007BFF" stopOpacity="0" />
                 </linearGradient>
               </defs>
               <path
@@ -77,7 +77,7 @@ export function DashboardPreviewSection() {
               <path
                 d={EQUITY_PATH}
                 fill="none"
-                stroke="#4a8eff"
+                stroke="#007BFF"
                 strokeWidth="3"
                 strokeLinecap="round"
                 strokeLinejoin="round"

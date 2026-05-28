@@ -11,7 +11,7 @@ export function HeaderAuth({ onNavigate }: { onNavigate?: () => void }) {
   if (status === "loading") {
     return (
       <div
-        className="h-10 w-24 animate-pulse rounded-lg bg-white/5"
+        className="h-10 w-24 animate-pulse rounded-lg bg-surface-container"
         aria-hidden
       />
     )

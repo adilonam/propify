@@ -22,11 +22,11 @@ function Button({
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background",
         "disabled:pointer-events-none disabled:opacity-50",
         variant === "primary" &&
-          "bg-primary text-on-primary-container hover:opacity-90 active:scale-95",
+          "button-primary glow-blue text-on-primary-container hover:brightness-110 active:scale-95",
         variant === "outline" &&
-          "border border-white/20 bg-white/5 text-on-surface hover:bg-white/10",
+          "border border-outline-variant bg-surface-container text-on-surface hover:bg-surface-container-high",
         variant === "ghost" &&
-          "border border-white/20 bg-transparent text-on-surface-variant hover:text-on-surface",
+          "border border-outline-variant bg-transparent text-on-surface-variant hover:text-on-surface",
         className
       )}
       {...props}

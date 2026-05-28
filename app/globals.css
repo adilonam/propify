@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-background: #05080d;
-  --color-surface: #121414;
-  --color-surface-container: #0e1521;
-  --color-surface-container-high: #1a1f2e;
-  --color-surface-container-highest: #252b3a;
-  --color-primary: #4a8eff;
-  --color-primary-dim: #adc7ff;
-  --color-on-surface: #e2e2e2;
-  --color-on-surface-variant: #c1c6d7;
-  --color-on-primary-container: #00285b;
+  --color-background: #020712;
+  --color-surface: #00030a;
+  --color-surface-container: #121826;
+  --color-surface-container-high: #171d2b;
+  --color-surface-container-highest: #1d2637;
+  --color-primary: #007bff;
+  --color-primary-dim: #00a8ff;
+  --color-on-surface: #f3f6ff;
+  --color-on-surface-variant: #9ca8ba;
+  --color-on-primary-container: #ffffff;
   --color-secondary-fixed: #60ff99;
-  --color-outline-variant: #414754;
+  --color-outline-variant: #263247;
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
@@ -24,25 +24,64 @@
 }
 
 @layer base {
+  :root {
+    --bg-main: #020712;
+    --bg-gradient-dark: #00030a;
+    --bg-gradient-blue: #031b33;
+    --card-bg: #121826;
+    --card-bg-2: #171d2b;
+    --card-border: #263247;
+    --primary-blue: #007bff;
+    --electric-blue: #00a8ff;
+    --cyan-line: #18c8ff;
+    --text-white: #ffffff;
+    --text-main: #f3f6ff;
+    --text-muted: #9ca8ba;
+    --success-green: #22c55e;
+    --danger-red: #ef4444;
+  }
+
   html {
     scroll-behavior: smooth;
   }
 
   body {
     @apply bg-background text-on-surface antialiased;
-    background-image: radial-gradient(
-      circle at 80% 10%,
-      rgba(74, 142, 255, 0.12) 0%,
-      transparent 45%
+    background: radial-gradient(
+      circle at top right,
+      var(--bg-gradient-blue) 0%,
+      var(--bg-main) 35%,
+      var(--bg-gradient-dark) 100%
     );
+    color: var(--text-main);
   }
 }
 
 @layer utilities {
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+  }
+
+  .button-primary {
+    background: linear-gradient(
+      135deg,
+      var(--primary-blue),
+      var(--electric-blue)
+    );
+    color: var(--text-white);
+  }
+
+  .glow-blue {
+    box-shadow: 0 0 25px rgba(0, 123, 255, 0.45);
+  }
+
   .glass-card {
-    background: rgba(14, 21, 33, 0.7);
+    background: color-mix(in srgb, var(--card-bg) 88%, transparent);
     backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--card-border);
+    box-shadow: 0 18px 40px rgba(0, 3, 10, 0.28);
   }
 
   .font-heading {

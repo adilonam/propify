@@ -67,7 +67,7 @@ export function Header() {
   }, [navLinks])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-outline-variant bg-background/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-12">
         <a href="#accueil" className="shrink-0">
           <Logo />
@@ -105,7 +105,7 @@ export function Header() {
       </nav>
 
       {mobileOpen && (
-        <div className="border-t border-white/10 px-4 py-4 md:hidden">
+        <div className="border-t border-outline-variant px-4 py-4 md:hidden">
           <div className="flex flex-col gap-3">
             {navLinks.map((link) => (
               <a
