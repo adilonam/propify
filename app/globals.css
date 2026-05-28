@@ -47,12 +47,16 @@
 
   body {
     @apply bg-background text-on-surface antialiased;
-    background: radial-gradient(
-      circle at top right,
-      var(--bg-gradient-blue) 0%,
-      var(--bg-main) 35%,
-      var(--bg-gradient-dark) 100%
-    );
+    background:
+      radial-gradient(
+        46rem 34rem at 86% 6%,
+        color-mix(in srgb, var(--bg-gradient-blue) 80%, #000 20%) 0%,
+        rgba(3, 27, 51, 0.62) 32%,
+        rgba(2, 7, 18, 0.35) 56%,
+        transparent 75%
+      ),
+      linear-gradient(180deg, #01030a 0%, var(--bg-main) 48%, var(--bg-gradient-dark) 100%);
+    background-color: var(--bg-gradient-dark);
     color: var(--text-main);
   }
 }
@@ -78,10 +82,9 @@
   }
 
   .glass-card {
-    background: color-mix(in srgb, var(--card-bg) 88%, transparent);
-    backdrop-filter: blur(12px);
+    background: var(--card-bg);
     border: 1px solid var(--card-border);
-    box-shadow: 0 18px 40px rgba(0, 3, 10, 0.28);
+    border-radius: 16px;
   }
 
   .font-heading {

@@ -11,35 +11,15 @@ import { cn } from "@/lib/utils"
 const PUBLIC_NAV_LINKS = [
   { href: "#accueil", label: "Accueil" },
   { href: "#challenges", label: "Challenges" },
+  { href: "#dashboard", label: "Dashboard" },
   { href: "#confiance", label: "Confiance" },
   { href: "#faq", label: "FAQ" },
   { href: "#contact", label: "Contact" },
 ] as const
 
-const DASHBOARD_NAV_LINK = {
-  href: "#dashboard",
-  label: "Dashboard",
-} as const
-
-function getNavLinks(isAuthenticated: boolean) {
-  if (!isAuthenticated) {
-    return [...PUBLIC_NAV_LINKS]
-  }
-
-  return [
-    PUBLIC_NAV_LINKS[0],
-    PUBLIC_NAV_LINKS[1],
-    DASHBOARD_NAV_LINK,
-    ...PUBLIC_NAV_LINKS.slice(2),
-  ]
-}
-
 export function Header() {
   const { data: session } = useSession()
-  const navLinks = React.useMemo(
-    () => getNavLinks(Boolean(session?.user)),
-    [session?.user]
-  )
+  const navLinks = React.useMemo(() => [...PUBLIC_NAV_LINKS], [])
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [active, setActive] = React.useState("accueil")
 
@@ -64,16 +44,16 @@ export function Header() {
     }
 
     return () => observer.disconnect()
-  }, [navLinks])
+  }, [navLinks, session?.user])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-outline-variant bg-background/80 backdrop-blur-md">
+    <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-12">
         <a href="#accueil" className="shrink-0">
           <Logo />
         </a>
 
-        <div className="hidden items-center gap-6 lg:flex">
+        <div className="hidden items-center gap-6 md:flex">
           {navLinks.map((link) => (
             <a
               key={link.href}

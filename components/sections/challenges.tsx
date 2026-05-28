@@ -74,9 +74,9 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
   return (
     <div
       className={cn(
-        "glass-card flex flex-col items-center space-y-6 rounded-2xl p-6 text-center transition-all",
+        "card flex flex-col items-center space-y-6 p-6 text-center transition-all",
         challenge.featured &&
-          "z-10 scale-105 border-2 border-primary shadow-2xl shadow-primary/20"
+          "z-10 scale-105 border-2 border-primary glow-blue"
       )}
     >
       {challenge.tag ? (
@@ -105,7 +105,7 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
         </div>
       </div>
 
-      <div className="w-full space-y-3 border-t border-white/5 pt-4">
+      <div className="w-full space-y-3 border-t border-outline-variant pt-4">
         {[
           ["Profit target", challenge.profitTarget],
           ["Daily loss", challenge.dailyLoss],

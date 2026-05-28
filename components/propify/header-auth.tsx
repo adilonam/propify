@@ -22,7 +22,7 @@ export function HeaderAuth({ onNavigate }: { onNavigate?: () => void }) {
 
     return (
       <div className="flex flex-wrap items-center gap-3">
-        <span className="max-w-[140px] truncate font-label text-sm font-semibold text-on-surface md:max-w-[200px]">
+        <span className="max-w-35 truncate font-label text-sm font-semibold text-on-surface md:max-w-50">
           {displayName}
         </span>
         <Button
@@ -47,7 +47,7 @@ export function HeaderAuth({ onNavigate }: { onNavigate?: () => void }) {
         </Button>
       </Link>
       <Link href="/signup" onClick={onNavigate}>
-        <Button>S&apos;inscrire</Button>
+        <Button>Commencer</Button>
       </Link>
     </div>
   )

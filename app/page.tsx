@@ -22,7 +22,7 @@ export default async function Page() {
         <KeyInfoSection />
         <ChallengesSection />
         <WhyPropifySection />
-        {session?.user ? <DashboardPreviewSection /> : null}
+        <DashboardPreviewSection />
         <TrustSection />
         <FaqSection />
       </main>

@@ -34,7 +34,7 @@ export function TrustSection() {
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {TRUST_CARDS.map((card) => (
-          <div key={card.title} className="glass-card space-y-3 rounded-2xl p-8">
+          <div key={card.title} className="card space-y-3 p-8">
             <h3 className="font-heading text-3xl font-bold text-on-surface">
               {card.title}
             </h3>
@@ -47,13 +47,13 @@ export function TrustSection() {
         ))}
       </div>
 
-      <div className="glass-card space-y-8 rounded-2xl p-8 md:p-10">
+      <div className="card space-y-8 p-8 md:p-10">
         <h3 className="font-heading text-2xl font-bold text-on-surface">
           Process simple en 4 étapes
         </h3>
 
         <div className="relative">
-          <div className="absolute top-5 right-0 left-0 hidden h-0.5 bg-outline-variant md:block" />
+          <div className="absolute top-5 right-0 left-0 hidden h-0.5 bg-primary md:block" />
           <ol className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4">
             {STEPS.map((step, index) => (
               <li key={step} className="relative flex flex-col items-center text-center">

@@ -41,14 +41,14 @@ export function HeroSection() {
 
       <div className="relative group">
         <div className="absolute -inset-4 rounded-full bg-primary/20 opacity-50 blur-3xl transition-opacity group-hover:opacity-70" />
-        <div className="glass-card relative flex aspect-square items-center justify-center overflow-hidden rounded-2xl p-8">
-          <div className="relative flex size-48 items-center justify-center rounded-2xl bg-gradient-to-br from-primary/30 to-surface-container-high md:size-64">
+        <div className="card relative flex aspect-square items-center justify-center overflow-hidden p-8 md:p-10">
+          <div className="relative flex size-56 items-center justify-center rounded-2xl bg-linear-to-br from-primary/15 to-surface-container-high md:size-80">
             <Image
               src="/images/logo.png"
               alt="Propify"
-              width={160}
-              height={160}
-              className="size-32 object-contain md:size-40"
+              width={220}
+              height={220}
+              className="size-40 object-contain md:size-56"
               unoptimized
             />
           </div>

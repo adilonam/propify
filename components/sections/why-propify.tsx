@@ -51,9 +51,9 @@ export function WhyPropifySection() {
           {FEATURES.map((feature) => (
             <div
               key={feature.title}
-              className={`glass-card space-y-4 rounded-2xl p-8 ${
+              className={`card space-y-4 p-8 ${
                 "highlighted" in feature && feature.highlighted
-                  ? "border-l-4 border-l-primary"
+                  ? "border-primary glow-blue"
                   : ""
               }`}
             >
@@ -65,7 +65,7 @@ export function WhyPropifySection() {
           ))}
         </div>
 
-        <div className="glass-card flex flex-col space-y-6 rounded-2xl bg-surface-container p-8">
+        <div className="card flex flex-col space-y-6 bg-surface-container p-8">
           <h3 className="font-heading text-2xl font-semibold text-on-surface">
             Bloc de confiance
           </h3>
@@ -86,7 +86,7 @@ export function WhyPropifySection() {
         </div>
       </div>
 
-      <div className="flex flex-col items-center justify-between gap-8 rounded-2xl border-2 border-primary bg-surface-container p-8 md:flex-row md:p-12">
+      <div className="card flex flex-col items-center justify-between gap-8 border-2 border-primary bg-surface-container p-8 glow-blue md:flex-row md:p-12">
         <div className="space-y-2">
           <h2 className="font-heading text-2xl font-semibold text-white">
             Le luxe = clarté + espace + confiance
