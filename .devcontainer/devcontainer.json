@@ -21,7 +21,8 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "bradlc.vscode-tailwindcss",
-        "Prisma.prisma"
+        "Prisma.prisma",
+        "ms-vscode.vscode-chat-customizations-evaluations"
       ]
     }
   }

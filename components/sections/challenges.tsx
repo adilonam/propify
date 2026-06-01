@@ -1,87 +1,66 @@
 "use client"
 
 import * as React from "react"
+import { useRouter } from "next/navigation"
 import { ArrowRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
-type ChallengeStep = "2-step" | "1-step"
+type ChallengeStepType = "ONE_STEP" | "TWO_STEP"
 
-type Challenge = {
-  size: string
-  price: string
-  tag?: string
-  featured?: boolean
-  profitTarget: string
-  dailyLoss: string
-  maxLoss: string
-  minDays: string
+type DbChallenge = {
+  id: string
+  title: string
+  accountSize: number
+  fee: string
+  currency: string
+  stepType: ChallengeStepType
+  profitTargetPercent: string
+  dailyLossPercent: string
+  maxLossPercent: string
+  minTradingDays: number
+  isPopular: boolean
+  isBestChoice: boolean
+  isActive: boolean
+  sortOrder: number
 }
 
-const CHALLENGES_2STEP: Challenge[] = [
-  {
-    size: "10K",
-    price: "€89",
-    tag: "POPULAIRE",
-    profitTarget: "10% / 5%",
-    dailyLoss: "5%",
-    maxLoss: "10%",
-    minDays: "4 jours",
-  },
-  {
-    size: "25K",
-    price: "€149",
-    profitTarget: "10% / 5%",
-    dailyLoss: "5%",
-    maxLoss: "10%",
-    minDays: "4 jours",
-  },
-  {
-    size: "50K",
-    price: "€249",
-    tag: "MEILLEUR CHOIX",
-    featured: true,
-    profitTarget: "10% / 5%",
-    dailyLoss: "5%",
-    maxLoss: "10%",
-    minDays: "4 jours",
-  },
-  {
-    size: "100K",
-    price: "€499",
-    profitTarget: "10% / 5%",
-    dailyLoss: "5%",
-    maxLoss: "10%",
-    minDays: "4 jours",
-  },
-  {
-    size: "200K",
-    price: "€999",
-    profitTarget: "10% / 5%",
-    dailyLoss: "5%",
-    maxLoss: "10%",
-    minDays: "4 jours",
-  },
-]
+function formatAccountSize(size: number): string {
+  if (size >= 1_000_000) return `${size / 1_000_000}M`
+  if (size >= 1_000) return `${size / 1_000}K`
+  return String(size)
+}
 
-const CHALLENGES_1STEP: Challenge[] = CHALLENGES_2STEP.map((c) => ({
-  ...c,
-  profitTarget: "10%",
-}))
+function formatPrice(amount: string, currency: string): string {
+  const symbol = currency === "EUR" ? "€" : currency
+  return `${symbol}${Number(amount).toLocaleString("fr-FR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`
+}
 
-function ChallengeCard({ challenge }: { challenge: Challenge }) {
+function ChallengeCard({ challenge }: { challenge: DbChallenge }) {
+  const router = useRouter()
+
+  const profitLabel = `${challenge.profitTargetPercent}%`
+
+  const tag = challenge.isPopular
+    ? "POPULAIRE"
+    : challenge.isBestChoice
+    ? "MEILLEUR CHOIX"
+    : null
+
   return (
     <div
       className={cn(
         "card flex flex-col items-center space-y-6 p-6 text-center transition-all",
-        challenge.featured &&
-          "z-10 scale-105 border-2 border-primary glow-blue"
+        challenge.isBestChoice && "z-10 scale-105 border-2 border-primary glow-blue"
       )}
     >
-      {challenge.tag ? (
+      {tag ? (
         <span className="rounded bg-primary/20 px-2 py-1 font-label text-[10px] tracking-widest text-primary uppercase">
-          {challenge.tag}
+          {tag}
         </span>
       ) : (
         <span className="h-6" />
@@ -89,48 +68,54 @@ function ChallengeCard({ challenge }: { challenge: Challenge }) {
 
       <div>
         <div className="font-heading text-3xl font-semibold text-primary">
-          {challenge.size}
+          {formatAccountSize(challenge.accountSize)}
         </div>
-        <div className="font-label text-sm text-on-surface-variant">
-          Challenge
-        </div>
+        <div className="font-label text-sm text-on-surface-variant">Challenge</div>
       </div>
 
       <div className="space-y-1">
-        <div className="font-label text-sm text-on-surface-variant">
-          Frais unique
-        </div>
+        <div className="font-label text-sm text-on-surface-variant">Frais unique</div>
         <div className="font-heading text-2xl font-bold text-on-surface">
-          {challenge.price}
+          {formatPrice(challenge.fee, challenge.currency)}
         </div>
       </div>
 
       <div className="w-full space-y-3 border-t border-outline-variant pt-4">
         {[
-          ["Profit target", challenge.profitTarget],
-          ["Daily loss", challenge.dailyLoss],
-          ["Max loss", challenge.maxLoss],
-          ["Min days", challenge.minDays],
+          ["Profit target", profitLabel],
+          ["Daily loss", `${challenge.dailyLossPercent}%`],
+          ["Max loss", `${challenge.maxLossPercent}%`],
+          ["Min days", `${challenge.minTradingDays} jours`],
         ].map(([label, value]) => (
-          <div
-            key={label}
-            className="flex justify-between font-label text-sm"
-          >
+          <div key={label} className="flex justify-between font-label text-sm">
             <span className="text-on-surface-variant">{label}</span>
             <span>{value}</span>
           </div>
         ))}
       </div>
 
-      <Button className="w-full py-3">Choisir</Button>
+      <Button
+        className="w-full py-3"
+        onClick={() => router.push(`/checkout/${challenge.id}`)}
+      >
+        Choisir
+      </Button>
     </div>
   )
 }
 
 export function ChallengesSection() {
-  const [step, setStep] = React.useState<ChallengeStep>("2-step")
-  const challenges =
-    step === "2-step" ? CHALLENGES_2STEP : CHALLENGES_1STEP
+  const [step, setStep] = React.useState<ChallengeStepType>("TWO_STEP")
+  const [challenges, setChallenges] = React.useState<DbChallenge[]>([])
+
+  React.useEffect(() => {
+    fetch("/api/challenges")
+      .then((res) => res.json())
+      .then((data: DbChallenge[]) => setChallenges(data))
+      .catch(() => {})
+  }, [])
+
+  const filtered = challenges.filter((c) => c.stepType === step)
 
   return (
     <section id="challenges" className="scroll-mt-24 space-y-8">
@@ -144,7 +129,7 @@ export function ChallengesSection() {
 
         <div className="flex justify-center pt-4">
           <div className="inline-flex rounded-lg border border-outline-variant bg-surface-container-highest p-1">
-            {(["2-step", "1-step"] as const).map((option) => (
+            {(["TWO_STEP", "ONE_STEP"] as const).map((option) => (
               <button
                 key={option}
                 type="button"
@@ -156,7 +141,7 @@ export function ChallengesSection() {
                     : "text-on-surface-variant"
                 )}
               >
-                {option === "2-step" ? "2-Step" : "1-Step"}
+                {option === "TWO_STEP" ? "2-Step" : "1-Step"}
               </button>
             ))}
           </div>
@@ -164,8 +149,8 @@ export function ChallengesSection() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        {challenges.map((challenge) => (
-          <ChallengeCard key={challenge.size} challenge={challenge} />
+        {filtered.map((challenge) => (
+          <ChallengeCard key={challenge.id} challenge={challenge} />
         ))}
       </div>
 

@@ -14,7 +14,11 @@
     "db:generate": "prisma generate",
     "postinstall": "prisma generate",
     "db:studio": "prisma studio",
-    "db:update": "prisma generate && prisma migrate dev"
+    "db:update": "prisma generate && prisma migrate dev",
+    "db:seed": "prisma db seed"
+  },
+  "prisma": {
+    "seed": "pnpm dlx tsx prisma/seed.ts"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
