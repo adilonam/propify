@@ -3,6 +3,14 @@
 import * as React from "react"
 
 import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { cn } from "@/lib/utils"
 
@@ -82,6 +90,7 @@ export function ChallengesAdminClient() {
   const [loading, setLoading] = React.useState(true)
   const [saving, setSaving] = React.useState(false)
   const [editingId, setEditingId] = React.useState<string | null>(null)
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [form, setForm] = React.useState<ChallengeForm>(INITIAL_FORM)
 
@@ -110,6 +119,17 @@ export function ChallengesAdminClient() {
   function resetForm() {
     setForm(INITIAL_FORM)
     setEditingId(null)
+  }
+
+  function openCreateDialog() {
+    resetForm()
+    setError(null)
+    setIsDialogOpen(true)
+  }
+
+  function closeDialog() {
+    setIsDialogOpen(false)
+    setSaving(false)
     setError(null)
   }
 
@@ -145,6 +165,7 @@ export function ChallengesAdminClient() {
     })
     setEditingId(challenge.id)
     setError(null)
+    setIsDialogOpen(true)
   }
 
   function onChangeField<K extends keyof ChallengeForm>(key: K, value: ChallengeForm[K]) {
@@ -212,6 +233,7 @@ export function ChallengesAdminClient() {
       }
 
       await loadChallenges()
+      closeDialog()
       resetForm()
     } catch {
       setError("Impossible de sauvegarder le challenge.")
@@ -254,193 +276,207 @@ export function ChallengesAdminClient() {
 
   return (
     <section className="space-y-8">
-      <header className="space-y-2">
-        <h1 className="font-heading text-3xl font-bold text-on-surface md:text-4xl">
-          Challenges Admin
-        </h1>
-        <p className="text-on-surface-variant">
-          Creer, modifier et supprimer les challenges et leurs informations de step.
-        </p>
+      <header className="flex items-center justify-between gap-3">
+        <div className="space-y-2">
+          <h1 className="font-heading text-3xl font-bold text-on-surface md:text-4xl">
+            Challenges Admin
+          </h1>
+          <p className="text-on-surface-variant">
+            Creer, modifier et supprimer les challenges et leurs informations de step.
+          </p>
+        </div>
+        <Button onClick={openCreateDialog}>Nouveau challenge</Button>
       </header>
 
-      {error && (
+      {error && !isDialogOpen && (
         <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
           {error}
         </p>
       )}
 
-      <form onSubmit={onSubmit} className="card space-y-6 p-6">
-        <div className="flex items-center justify-between">
-          <h2 className="font-label text-lg font-bold text-on-surface">
-            {editingId ? "Modifier un challenge" : "Nouveau challenge"}
-          </h2>
-          <Button variant="ghost" onClick={resetForm} type="button">
-            Reinitialiser
-          </Button>
-        </div>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>
+              {editingId ? "Modifier un challenge" : "Nouveau challenge"}
+            </DialogTitle>
+            <DialogDescription>
+              Renseignez les donnees du challenge et les regles des deux etapes.
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
-          <label className="space-y-2 text-sm">
-            <span className="text-on-surface-variant">Titre</span>
-            <Input
-              value={form.title}
-              onChange={(e) => onChangeField("title", e.target.value)}
-              placeholder="10K Challenge"
-              required
-            />
-          </label>
-
-          <label className="space-y-2 text-sm">
-            <span className="text-on-surface-variant">Account size</span>
-            <Input
-              type="number"
-              value={form.accountSize}
-              onChange={(e) => onChangeField("accountSize", e.target.value)}
-              placeholder="10000"
-              required
-            />
-          </label>
-
-          <label className="space-y-2 text-sm">
-            <span className="text-on-surface-variant">Fee</span>
-            <Input
-              type="number"
-              step="0.01"
-              value={form.fee}
-              onChange={(e) => onChangeField("fee", e.target.value)}
-              placeholder="89.00"
-              required
-            />
-          </label>
-
-          <label className="space-y-2 text-sm">
-            <span className="text-on-surface-variant">Currency</span>
-            <Input
-              value={form.currency}
-              onChange={(e) => onChangeField("currency", e.target.value.toUpperCase())}
-              placeholder="EUR"
-              required
-            />
-          </label>
-
-          <label className="space-y-2 text-sm">
-            <span className="text-on-surface-variant">Sort order</span>
-            <Input
-              type="number"
-              value={form.sortOrder}
-              onChange={(e) => onChangeField("sortOrder", e.target.value)}
-              required
-            />
-          </label>
-
-          <label className="flex items-center gap-2 pt-8 text-sm text-on-surface-variant">
-            <input
-              type="checkbox"
-              checked={form.isActive}
-              onChange={(e) => onChangeField("isActive", e.target.checked)}
-            />
-            Active
-          </label>
-
-          <label className="flex items-center gap-2 pt-8 text-sm text-on-surface-variant">
-            <input
-              type="checkbox"
-              checked={form.isPopular}
-              onChange={(e) => onChangeField("isPopular", e.target.checked)}
-            />
-            Popular
-          </label>
-
-          <label className="flex items-center gap-2 pt-8 text-sm text-on-surface-variant">
-            <input
-              type="checkbox"
-              checked={form.isBestChoice}
-              onChange={(e) => onChangeField("isBestChoice", e.target.checked)}
-            />
-            Best choice
-          </label>
-        </div>
-
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {([
-            { key: "step1", label: "Step 1" },
-            { key: "step2", label: "Step 2" },
-          ] as const).map((stepConfig) => {
-            const step = form[stepConfig.key]
-
-            return (
-              <div key={stepConfig.key} className="rounded-lg border border-outline-variant p-4">
-                <h3 className="mb-3 font-label text-sm font-bold text-on-surface">
-                  {stepConfig.label}
-                </h3>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <label className="space-y-1 text-sm">
-                    <span className="text-on-surface-variant">Profit target %</span>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      value={step.profitTargetPercent}
-                      onChange={(e) =>
-                        onChangeStep(stepConfig.key, "profitTargetPercent", e.target.value)
-                      }
-                      required
-                    />
-                  </label>
-
-                  <label className="space-y-1 text-sm">
-                    <span className="text-on-surface-variant">Daily loss %</span>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      value={step.dailyLossPercent}
-                      onChange={(e) =>
-                        onChangeStep(stepConfig.key, "dailyLossPercent", e.target.value)
-                      }
-                      required
-                    />
-                  </label>
-
-                  <label className="space-y-1 text-sm">
-                    <span className="text-on-surface-variant">Max loss %</span>
-                    <Input
-                      type="number"
-                      step="0.01"
-                      value={step.maxLossPercent}
-                      onChange={(e) =>
-                        onChangeStep(stepConfig.key, "maxLossPercent", e.target.value)
-                      }
-                      required
-                    />
-                  </label>
-
-                  <label className="space-y-1 text-sm">
-                    <span className="text-on-surface-variant">Min trading days</span>
-                    <Input
-                      type="number"
-                      value={step.minTradingDays}
-                      onChange={(e) =>
-                        onChangeStep(stepConfig.key, "minTradingDays", e.target.value)
-                      }
-                      required
-                    />
-                  </label>
-                </div>
-              </div>
-            )
-          })}
-        </div>
-
-        <div className="flex items-center gap-3">
-          <Button type="submit" disabled={saving}>
-            {saving ? "Sauvegarde..." : editingId ? "Mettre a jour" : "Creer challenge"}
-          </Button>
-          {editingId && (
-            <Button variant="outline" type="button" onClick={resetForm}>
-              Annuler edition
-            </Button>
+          {error && (
+            <p className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+              {error}
+            </p>
           )}
-        </div>
-      </form>
+
+          <form onSubmit={onSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+              <label className="space-y-2 text-sm">
+                <span className="text-on-surface-variant">Titre</span>
+                <Input
+                  value={form.title}
+                  onChange={(e) => onChangeField("title", e.target.value)}
+                  placeholder="10K Challenge"
+                  required
+                />
+              </label>
+
+              <label className="space-y-2 text-sm">
+                <span className="text-on-surface-variant">Account size</span>
+                <Input
+                  type="number"
+                  value={form.accountSize}
+                  onChange={(e) => onChangeField("accountSize", e.target.value)}
+                  placeholder="10000"
+                  required
+                />
+              </label>
+
+              <label className="space-y-2 text-sm">
+                <span className="text-on-surface-variant">Fee</span>
+                <Input
+                  type="number"
+                  step="0.01"
+                  value={form.fee}
+                  onChange={(e) => onChangeField("fee", e.target.value)}
+                  placeholder="89.00"
+                  required
+                />
+              </label>
+
+              <label className="space-y-2 text-sm">
+                <span className="text-on-surface-variant">Currency</span>
+                <Input
+                  value={form.currency}
+                  onChange={(e) => onChangeField("currency", e.target.value.toUpperCase())}
+                  placeholder="EUR"
+                  required
+                />
+              </label>
+
+              <label className="space-y-2 text-sm">
+                <span className="text-on-surface-variant">Sort order</span>
+                <Input
+                  type="number"
+                  value={form.sortOrder}
+                  onChange={(e) => onChangeField("sortOrder", e.target.value)}
+                  required
+                />
+              </label>
+
+              <label className="flex items-center gap-2 pt-8 text-sm text-on-surface-variant">
+                <input
+                  type="checkbox"
+                  checked={form.isActive}
+                  onChange={(e) => onChangeField("isActive", e.target.checked)}
+                />
+                Active
+              </label>
+
+              <label className="flex items-center gap-2 pt-8 text-sm text-on-surface-variant">
+                <input
+                  type="checkbox"
+                  checked={form.isPopular}
+                  onChange={(e) => onChangeField("isPopular", e.target.checked)}
+                />
+                Popular
+              </label>
+
+              <label className="flex items-center gap-2 pt-8 text-sm text-on-surface-variant">
+                <input
+                  type="checkbox"
+                  checked={form.isBestChoice}
+                  onChange={(e) => onChangeField("isBestChoice", e.target.checked)}
+                />
+                Best choice
+              </label>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {([
+                { key: "step1", label: "Step 1" },
+                { key: "step2", label: "Step 2" },
+              ] as const).map((stepConfig) => {
+                const step = form[stepConfig.key]
+
+                return (
+                  <div
+                    key={stepConfig.key}
+                    className="rounded-lg border border-outline-variant bg-surface-container/40 p-4"
+                  >
+                    <h3 className="mb-3 font-label text-sm font-bold text-on-surface">
+                      {stepConfig.label}
+                    </h3>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      <label className="space-y-1 text-sm">
+                        <span className="text-on-surface-variant">Profit target %</span>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          value={step.profitTargetPercent}
+                          onChange={(e) =>
+                            onChangeStep(stepConfig.key, "profitTargetPercent", e.target.value)
+                          }
+                          required
+                        />
+                      </label>
+
+                      <label className="space-y-1 text-sm">
+                        <span className="text-on-surface-variant">Daily loss %</span>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          value={step.dailyLossPercent}
+                          onChange={(e) =>
+                            onChangeStep(stepConfig.key, "dailyLossPercent", e.target.value)
+                          }
+                          required
+                        />
+                      </label>
+
+                      <label className="space-y-1 text-sm">
+                        <span className="text-on-surface-variant">Max loss %</span>
+                        <Input
+                          type="number"
+                          step="0.01"
+                          value={step.maxLossPercent}
+                          onChange={(e) =>
+                            onChangeStep(stepConfig.key, "maxLossPercent", e.target.value)
+                          }
+                          required
+                        />
+                      </label>
+
+                      <label className="space-y-1 text-sm">
+                        <span className="text-on-surface-variant">Min trading days</span>
+                        <Input
+                          type="number"
+                          value={step.minTradingDays}
+                          onChange={(e) =>
+                            onChangeStep(stepConfig.key, "minTradingDays", e.target.value)
+                          }
+                          required
+                        />
+                      </label>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            <DialogFooter>
+              <Button variant="outline" type="button" onClick={closeDialog}>
+                Fermer
+              </Button>
+              <Button type="submit" disabled={saving}>
+                {saving ? "Sauvegarde..." : editingId ? "Mettre a jour" : "Creer challenge"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       <section className="space-y-4">
         <h2 className="font-label text-lg font-bold text-on-surface">

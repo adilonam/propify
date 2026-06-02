@@ -9,23 +9,30 @@ import { HeaderAuth } from "@/components/propify/header-auth"
 import { cn } from "@/lib/utils"
 
 const PUBLIC_NAV_LINKS = [
-  { href: "#accueil", label: "Accueil" },
-  { href: "#challenges", label: "Challenges" },
-  { href: "#dashboard", label: "Dashboard" },
-  { href: "#confiance", label: "Confiance" },
-  { href: "#faq", label: "FAQ" },
-  { href: "#contact", label: "Contact" },
+  { sectionId: "accueil", label: "Accueil" },
+  { sectionId: "challenges", label: "Challenges" },
+  { sectionId: "dashboard", label: "Dashboard" },
+  { sectionId: "confiance", label: "Confiance" },
+  { sectionId: "faq", label: "FAQ" },
+  { sectionId: "contact", label: "Contact" },
 ] as const
 
 export function Header() {
   const { data: session } = useSession()
-  const navLinks = React.useMemo(() => [...PUBLIC_NAV_LINKS], [])
+  const navLinks = React.useMemo(
+    () =>
+      PUBLIC_NAV_LINKS.map((link) => ({
+        ...link,
+        href: `/#${link.sectionId}`,
+      })),
+    []
+  )
   const [mobileOpen, setMobileOpen] = React.useState(false)
   const [active, setActive] = React.useState("accueil")
 
   React.useEffect(() => {
     const sections = navLinks
-      .map((l) => document.querySelector(l.href))
+      .map((l) => document.querySelector(`#${l.sectionId}`))
       .filter(Boolean) as HTMLElement[]
 
     const observer = new IntersectionObserver(
@@ -49,7 +56,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-12">
-        <a href="#accueil" className="shrink-0">
+        <a href="/#accueil" className="shrink-0">
           <Logo />
         </a>
 
@@ -60,7 +67,7 @@ export function Header() {
               href={link.href}
               className={cn(
                 "font-label text-sm transition-colors",
-                active === link.href.slice(1)
+                active === link.sectionId
                   ? "border-b-2 border-primary pb-0.5 text-primary"
                   : "text-on-surface-variant hover:text-primary"
               )}

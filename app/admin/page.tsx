@@ -13,11 +13,12 @@ const ADMIN_CARDS = [
   {
     title: "Users",
     description: "Consulter les comptes, roles et activite des utilisateurs.",
+    href: "/admin/users",
   },
   {
     title: "Orders",
     description: "Suivre les commandes et leurs statuts de paiement.",
-    href: "/orders",
+    href: "/admin/orders",
   },
 ]
 

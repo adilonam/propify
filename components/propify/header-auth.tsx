@@ -94,12 +94,12 @@ export function HeaderAuth({ onNavigate }: { onNavigate?: () => void }) {
               </Link>
               {isAdmin ? (
                 <Link
-                  href="/admin/challenges"
+                  href="/admin"
                   onClick={() => setMenuOpen(false)}
                   className="flex w-full items-center gap-2 rounded-lg px-3 py-2 font-label text-sm text-on-surface-variant transition-colors hover:bg-surface-container-high hover:text-on-surface"
                 >
                   <Shield className="size-4" />
-                  Admin challenges
+                  Admin
                 </Link>
               ) : null}
             </div>
