@@ -1,14 +1,9 @@
-const STATS = [
-  { value: "+2,500", label: "Traders financés" },
-  { value: "+10M$", label: "Récompenses payées" },
-  { value: "90%", label: "Reward split" },
-  { value: "24/7", label: "Support dédié" },
-] as const
+import { KEY_STATS } from "@/lib/site-content"
 
 export function StatsBarSection() {
   return (
     <section className="card grid grid-cols-2 gap-6 px-6 py-8 md:grid-cols-4 md:divide-x md:divide-outline-variant">
-      {STATS.map((stat) => (
+      {KEY_STATS.map((stat) => (
         <div
           key={stat.label}
           className="flex items-center gap-4 md:pl-4 first:md:pl-0"
