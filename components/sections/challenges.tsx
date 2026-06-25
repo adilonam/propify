@@ -156,7 +156,7 @@ export function ChallengesSection() {
 
       <p className="text-center">
         <a
-          href="#challenges"
+          href="/challenges"
           className="inline-flex items-center gap-2 font-label text-primary hover:underline"
         >
           Comparer tous les challenges
