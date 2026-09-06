@@ -161,12 +161,12 @@ export default function CheckoutPage() {
           onClick={handlePay}
           disabled={paying}
         >
-          {paying ? "Redirection…" : "Payer avec crypto"}
+          {paying ? "Redirection…" : "Payer"}
         </Button>
 
         <div className="flex items-center justify-center gap-2 font-label text-xs text-on-surface-variant">
           <ShieldCheck className="size-4 text-primary" />
-          Paiement sécurisé via NowPayments
+          Paiement sécurisé via Whop
         </div>
       </div>
     </div>

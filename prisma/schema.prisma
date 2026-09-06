@@ -129,16 +129,13 @@ model Order {
 }
 
 model Payment {
-  id              String   @id @default(cuid())
-  orderId         String   @unique
-  nowpaymentsId   String?  @unique
-  payAddress      String?
-  payCurrency     String?
-  payAmount       Decimal? @db.Decimal(20, 8)
-  actuallyPaid    Decimal? @db.Decimal(20, 8)
-  paymentStatus   String?
-  invoiceUrl      String?
-  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id             String   @id @default(cuid())
+  orderId        String   @unique
+  whopCheckoutId String?  @unique
+  whopPaymentId  String?  @unique
+  paymentStatus  String?
+  invoiceUrl     String?
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

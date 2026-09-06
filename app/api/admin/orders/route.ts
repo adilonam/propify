@@ -62,7 +62,7 @@ function formatOrder(order: {
   }
   payment: {
     id: string
-    nowpaymentsId: string | null
+    whopPaymentId: string | null
     paymentStatus: string | null
     invoiceUrl: string | null
   } | null
@@ -109,7 +109,7 @@ export async function GET() {
         payment: {
           select: {
             id: true,
-            nowpaymentsId: true,
+            whopPaymentId: true,
             paymentStatus: true,
             invoiceUrl: true,
           },
@@ -185,7 +185,7 @@ export async function POST(req: NextRequest) {
         payment: {
           select: {
             id: true,
-            nowpaymentsId: true,
+            whopPaymentId: true,
             paymentStatus: true,
             invoiceUrl: true,
           },
@@ -241,7 +241,7 @@ export async function PATCH(req: NextRequest) {
         payment: {
           select: {
             id: true,
-            nowpaymentsId: true,
+            whopPaymentId: true,
             paymentStatus: true,
             invoiceUrl: true,
           },

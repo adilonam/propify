@@ -3,6 +3,7 @@ import { z } from "zod"
 
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
+import { getWhopClient, logWhopError } from "@/lib/whop"
 
 const bodySchema = z.object({
   challengeId: z.string().min(1),
@@ -12,6 +13,10 @@ export async function POST(req: NextRequest) {
   const session = await auth()
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+  }
+
+  if (!process.env.WHOP_API_KEY) {
+    return NextResponse.json({ error: "Payment provider not configured" }, { status: 500 })
   }
 
   const parsed = bodySchema.safeParse(await req.json())
@@ -51,51 +56,55 @@ export async function POST(req: NextRequest) {
     },
   })
 
-  // Create NowPayments payment
-  const apiKey = process.env.NOWPAYMENTS_API_KEY
-  if (!apiKey) {
-    return NextResponse.json({ error: "Payment provider not configured" }, { status: 500 })
-  }
-
-  const priceAmount = Number(challengeInfo.challenge.fee).toFixed(2)
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"
+  const priceAmount = Number(challengeInfo.challenge.fee)
+  const currency = challengeInfo.challenge.currency.toLowerCase()
+  const title = `${challengeInfo.challenge.title} ${challengeInfo.challenge.accountSize} - Step ${challengeInfo.stepNumber}`
 
-  const nowpaymentsRes = await fetch("https://api.nowpayments.io/v1/invoice", {
-    method: "POST",
-    headers: {
-      "x-api-key": apiKey,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      price_amount: priceAmount,
-      price_currency: challengeInfo.challenge.currency.toLowerCase(),
-      order_id: order.id,
-      order_description: `${challengeInfo.challenge.title} ${challengeInfo.challenge.accountSize} - Step ${challengeInfo.stepNumber}`,
-      ipn_callback_url: `${baseUrl}/api/payments/webhook`,
-      success_url: `${baseUrl}/orders/${order.id}?status=success`,
-      cancel_url: `${baseUrl}/checkout/${challengeId}?status=cancelled`,
-    }),
-  })
+  try {
+    const whop = getWhopClient()
+    const checkout = await whop.checkoutConfigurations.create({
+      mode: "payment",
+      plan: {
+        title,
+        plan_type: "one_time",
+        initial_price: priceAmount,
+        currency,
+        force_create_new_plan: true,
+      },
+      metadata: {
+        order_id: order.id,
+        challenge_id: challengeInfo.challenge.id,
+        user_id: session.user.id,
+      },
+      redirect_url: `${baseUrl}/orders/${order.id}?status=success`,
+    })
 
-  if (!nowpaymentsRes.ok) {
+    if (!checkout.purchase_url) {
+      console.error("[whop] checkoutConfigurations.create returned no purchase_url", {
+        orderId: order.id,
+        checkoutId: checkout.id,
+        checkout,
+      })
+      await prisma.order.update({ where: { id: order.id }, data: { status: "FAILED" } })
+      return NextResponse.json({ error: "Failed to create payment" }, { status: 502 })
+    }
+
+    await prisma.payment.create({
+      data: {
+        orderId: order.id,
+        whopCheckoutId: checkout.id,
+        invoiceUrl: checkout.purchase_url,
+        paymentStatus: "created",
+      },
+    })
+
+    await prisma.order.update({ where: { id: order.id }, data: { status: "WAITING" } })
+
+    return NextResponse.json({ orderId: order.id, invoiceUrl: checkout.purchase_url })
+  } catch (error) {
+    logWhopError(`checkoutConfigurations.create failed (orderId=${order.id})`, error)
     await prisma.order.update({ where: { id: order.id }, data: { status: "FAILED" } })
     return NextResponse.json({ error: "Failed to create payment" }, { status: 502 })
   }
-
-  const invoice = (await nowpaymentsRes.json()) as {
-    id: string
-    invoice_url: string
-  }
-
-  await prisma.payment.create({
-    data: {
-      orderId: order.id,
-      nowpaymentsId: String(invoice.id),
-      invoiceUrl: invoice.invoice_url,
-    },
-  })
-
-  await prisma.order.update({ where: { id: order.id }, data: { status: "WAITING" } })
-
-  return NextResponse.json({ orderId: order.id, invoiceUrl: invoice.invoice_url })
 }

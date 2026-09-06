@@ -48,7 +48,7 @@ type AdminOrder = {
   }
   payment: {
     id: string
-    nowpaymentsId: string | null
+    whopPaymentId: string | null
     paymentStatus: string | null
     invoiceUrl: string | null
   } | null

@@ -1,52 +1,73 @@
 import { NextRequest, NextResponse } from "next/server"
+import { unwrapWebhook, WebhookVerificationError } from "@whop/sdk/helpers"
 
 import { prisma } from "@/lib/prisma"
+import { getWhopWebhookSecret } from "@/lib/whop"
 import type { OrderStatus } from "@/generated/prisma/client"
 
-// NowPayments IPN webhook
-// https://documenter.getpostman.com/view/7907941/2s93JqTRWN#webhook
+type WhopWebhookEvent = {
+  id?: string
+  type?: string
+  data?: {
+    id?: string
+    status?: string
+    metadata?: Record<string, unknown> | null
+  }
+}
+
+const eventStatusMap: Record<string, OrderStatus> = {
+  "payment.created": "WAITING",
+  "payment.pending": "WAITING",
+  "payment.authorized": "CONFIRMING",
+  "payment.succeeded": "FINISHED",
+  "payment.failed": "FAILED",
+  "payment.canceled": "EXPIRED",
+  "refund.created": "REFUNDED",
+}
+
+function asString(value: unknown): string | undefined {
+  return typeof value === "string" && value.length > 0 ? value : undefined
+}
+
 export async function POST(req: NextRequest) {
-  // Optionally verify NowPayments IPN secret header
-  const ipnSecret = process.env.NOWPAYMENTS_IPN_SECRET
-  if (ipnSecret) {
-    const sig = req.headers.get("x-nowpayments-sig")
-    if (!sig) {
-      return NextResponse.json({ error: "Missing signature" }, { status: 401 })
-    }
-    // Signature verification would go here using HMAC-SHA512
-    // Skipped for brevity but recommended in production
+  const webhookSecret = getWhopWebhookSecret()
+  if (!webhookSecret) {
+    return NextResponse.json({ error: "Webhook secret not configured" }, { status: 500 })
   }
 
-  let body: Record<string, unknown>
+  const payload = await req.text()
+  const headers = Object.fromEntries(req.headers)
+
+  let event: WhopWebhookEvent
   try {
-    body = (await req.json()) as Record<string, unknown>
-  } catch {
-    return NextResponse.json({ error: "Invalid body" }, { status: 400 })
+    event = unwrapWebhook<WhopWebhookEvent>(payload, {
+      headers,
+      key: webhookSecret,
+    })
+  } catch (error) {
+    if (error instanceof WebhookVerificationError) {
+      return NextResponse.json({ error: "Invalid signature" }, { status: 401 })
+    }
+    return NextResponse.json({ error: "Invalid webhook" }, { status: 400 })
   }
 
-  const orderId = body.order_id as string | undefined
-  const paymentStatus = body.payment_status as string | undefined
-  const nowpaymentsPaymentId = body.payment_id ? String(body.payment_id) : undefined
-
-  if (!orderId || !paymentStatus) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 })
+  const eventType = event.type
+  if (!eventType) {
+    return NextResponse.json({ ok: true })
   }
 
-  const statusMap: Record<string, OrderStatus> = {
-    waiting: "WAITING",
-    confirming: "CONFIRMING",
-    confirmed: "CONFIRMED",
-    sending: "SENDING",
-    partially_paid: "PARTIALLY_PAID",
-    finished: "FINISHED",
-    failed: "FAILED",
-    refunded: "REFUNDED",
-    expired: "EXPIRED",
-  }
-
-  const newStatus = statusMap[paymentStatus]
+  const newStatus = eventStatusMap[eventType]
   if (!newStatus) {
     return NextResponse.json({ ok: true })
+  }
+
+  const data = event.data ?? {}
+  const orderId = asString(data.metadata?.order_id)
+  const whopPaymentId = asString(data.id)
+  const paymentStatus = asString(data.status) ?? eventType.replace(/^payment\./, "").replace(/^refund\./, "")
+
+  if (!orderId) {
+    return NextResponse.json({ error: "Missing order_id metadata" }, { status: 400 })
   }
 
   await prisma.$transaction(async (tx) => {
@@ -59,11 +80,7 @@ export async function POST(req: NextRequest) {
       where: { orderId },
       data: {
         paymentStatus,
-        ...(nowpaymentsPaymentId ? { nowpaymentsId: nowpaymentsPaymentId } : {}),
-        ...(body.pay_address ? { payAddress: body.pay_address as string } : {}),
-        ...(body.pay_currency ? { payCurrency: body.pay_currency as string } : {}),
-        ...(body.pay_amount ? { payAmount: String(body.pay_amount) } : {}),
-        ...(body.actually_paid ? { actuallyPaid: String(body.actually_paid) } : {}),
+        ...(whopPaymentId ? { whopPaymentId } : {}),
       },
     })
   })
