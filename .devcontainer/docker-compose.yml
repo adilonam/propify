@@ -6,8 +6,6 @@ services:
     volumes:
       - ..:/workspaces/propify:cached
     command: sleep infinity
-    ports:
-      - "3000:3000"
     depends_on:
       db:
         condition: service_healthy
@@ -19,8 +17,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: propify
-    ports:
-      - "5432:5432"
     volumes:
       - postgres-data-propify:/var/lib/postgresql/data
     healthcheck:
