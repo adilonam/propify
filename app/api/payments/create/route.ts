@@ -3,7 +3,7 @@ import { z } from "zod"
 
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
-import { getWhopClient, logWhopError } from "@/lib/whop"
+import { getWhopClient, getWhopCompanyId, isWhopConfigured, logWhopError } from "@/lib/whop"
 
 const bodySchema = z.object({
   challengeId: z.string().min(1),
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  if (!process.env.WHOP_API_KEY) {
+  if (!isWhopConfigured()) {
     return NextResponse.json({ error: "Payment provider not configured" }, { status: 500 })
   }
 
@@ -56,15 +56,18 @@ export async function POST(req: NextRequest) {
     },
   })
 
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000"
+  const baseUrl = process.env.AUTH_URL ?? "http://localhost:3000"
   const priceAmount = Number(challengeInfo.challenge.fee)
   const currency = challengeInfo.challenge.currency.toLowerCase()
   const title = `${challengeInfo.challenge.title} ${challengeInfo.challenge.accountSize} - Step ${challengeInfo.stepNumber}`
+  const returnUrl = `${baseUrl}/checkout/${challengeId}?orderId=${order.id}`
 
   try {
     const whop = getWhopClient()
+    const companyId = getWhopCompanyId()
     const checkout = await whop.checkoutConfigurations.create({
-      mode: "payment",
+      // SDK/OpenAPI create field is still account_id (biz_ company id).
+      account_id: companyId,
       plan: {
         title,
         plan_type: "one_time",
@@ -77,14 +80,23 @@ export async function POST(req: NextRequest) {
         challenge_id: challengeInfo.challenge.id,
         user_id: session.user.id,
       },
-      redirect_url: `${baseUrl}/orders/${order.id}?status=success`,
+      redirect_url: returnUrl,
     })
 
-    if (!checkout.purchase_url) {
+    if (!checkout.id) {
+      console.error("[whop] checkoutConfigurations.create returned no id", {
+        orderId: order.id,
+        checkout,
+      })
+      await prisma.order.update({ where: { id: order.id }, data: { status: "FAILED" } })
+      return NextResponse.json({ error: "Failed to create payment" }, { status: 502 })
+    }
+
+    const purchaseUrl = checkout.purchase_url
+    if (!purchaseUrl) {
       console.error("[whop] checkoutConfigurations.create returned no purchase_url", {
         orderId: order.id,
         checkoutId: checkout.id,
-        checkout,
       })
       await prisma.order.update({ where: { id: order.id }, data: { status: "FAILED" } })
       return NextResponse.json({ error: "Failed to create payment" }, { status: 502 })
@@ -94,14 +106,19 @@ export async function POST(req: NextRequest) {
       data: {
         orderId: order.id,
         whopCheckoutId: checkout.id,
-        invoiceUrl: checkout.purchase_url,
+        invoiceUrl: purchaseUrl,
         paymentStatus: "created",
       },
     })
 
     await prisma.order.update({ where: { id: order.id }, data: { status: "WAITING" } })
 
-    return NextResponse.json({ orderId: order.id, invoiceUrl: checkout.purchase_url })
+    return NextResponse.json({
+      orderId: order.id,
+      sessionId: checkout.id,
+      purchaseUrl,
+      returnUrl,
+    })
   } catch (error) {
     logWhopError(`checkoutConfigurations.create failed (orderId=${order.id})`, error)
     await prisma.order.update({ where: { id: order.id }, data: { status: "FAILED" } })
