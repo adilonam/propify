@@ -44,7 +44,11 @@ export default function CheckoutPage() {
   const [paying, setPaying] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
 
-  const cancelled = searchParams.get("status") === "cancelled"
+  const paymentStatus = searchParams.get("status")
+  const orderIdFromQuery = searchParams.get("orderId")
+
+  const paymentSucceeded = paymentStatus === "success"
+  const paymentFailed = paymentStatus === "error" || paymentStatus === "cancelled"
 
   React.useEffect(() => {
     fetch("/api/challenges")
@@ -75,11 +79,14 @@ export default function CheckoutPage() {
         setError(data.error ?? "Une erreur est survenue")
         return
       }
-      const data = (await res.json()) as { invoiceUrl: string }
-      window.location.href = data.invoiceUrl
+      const data = (await res.json()) as { orderId: string; purchaseUrl: string }
+      if (!data.purchaseUrl) {
+        setError("Une erreur est survenue")
+        return
+      }
+      window.location.href = data.purchaseUrl
     } catch {
       setError("Une erreur est survenue")
-    } finally {
       setPaying(false)
     }
   }
@@ -99,6 +106,25 @@ export default function CheckoutPage() {
         <Link href="/#challenges">
           <Button variant="outline">Retour aux challenges</Button>
         </Link>
+      </div>
+    )
+  }
+
+  if (paymentSucceeded) {
+    return (
+      <div className="mx-auto max-w-lg space-y-8 px-4 py-16">
+        <div className="card space-y-6 p-8 text-center">
+          <div className="font-heading text-2xl font-bold text-emerald-400">
+            Paiement réussi
+          </div>
+          <p className="font-label text-sm text-on-surface-variant">
+            Votre commande a bien été enregistrée.
+            {orderIdFromQuery ? ` Référence : ${orderIdFromQuery}` : null}
+          </p>
+          <Link href="/orders">
+            <Button className="w-full py-3">Voir mes commandes</Button>
+          </Link>
+        </div>
       </div>
     )
   }
@@ -144,9 +170,9 @@ export default function CheckoutPage() {
           </div>
         </div>
 
-        {cancelled && (
+        {paymentFailed && (
           <p className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-4 py-3 text-center font-label text-sm text-yellow-300">
-            Paiement annulé. Vous pouvez réessayer.
+            Paiement annulé ou échoué. Vous pouvez réessayer.
           </p>
         )}
 
@@ -156,12 +182,12 @@ export default function CheckoutPage() {
           </p>
         )}
 
-        <Button
-          className="w-full py-3"
-          onClick={handlePay}
-          disabled={paying}
-        >
-          {paying ? "Redirection…" : "Payer"}
+        <Button className="w-full py-3" onClick={handlePay} disabled={paying}>
+          {paying
+            ? "Redirection…"
+            : paymentFailed
+              ? "Réessayer le paiement"
+              : "Payer"}
         </Button>
 
         <div className="flex items-center justify-center gap-2 font-label text-xs text-on-surface-variant">

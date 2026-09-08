@@ -9,19 +9,31 @@ export function getWhopClient(): WhopClient {
   }
 
   if (!client) {
+    const baseUrl = process.env.WHOP_API_BASE_URL
     client = new WhopClient({
       token,
-      ...(process.env.WHOP_API_BASE_URL
-        ? { baseUrl: process.env.WHOP_API_BASE_URL }
-        : {}),
+      ...(baseUrl ? { baseUrl } : {}),
     })
   }
 
   return client
 }
 
+/** Whop company / account id, prefixed `biz_`. */
+export function getWhopCompanyId(): string {
+  const companyId = process.env.WHOP_COMPANY_ID
+  if (!companyId) {
+    throw new Error("WHOP_COMPANY_ID is not set")
+  }
+  return companyId
+}
+
 export function getWhopWebhookSecret(): string | undefined {
   return process.env.WHOP_WEBHOOK_SECRET || undefined
+}
+
+export function isWhopConfigured(): boolean {
+  return Boolean(process.env.WHOP_API_KEY && process.env.WHOP_COMPANY_ID)
 }
 
 /** Logs the underlying Whop/API error to the server terminal without exposing it to clients. */
