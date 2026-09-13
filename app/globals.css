@@ -39,6 +39,18 @@
     --text-muted: #9ca8ba;
     --success-green: #22c55e;
     --danger-red: #ef4444;
+
+    /* Landing / skyline (platforms-trust, skyline hero, feature bento) */
+    --skyline-bg: #05020c;
+    --landing-bg: #05030a;
+    --landing-surface: #0a0a0f;
+    --landing-card: #121216;
+    --landing-gold: #f5c542;
+    --landing-purple: #6d28d9;
+    --landing-purple-deep: #581c87;
+    --landing-ink: #0a0612;
+    --landing-border: rgba(255, 255, 255, 0.08);
+    --landing-border-subtle: rgba(255, 255, 255, 0.04);
   }
 
   html {
@@ -97,5 +109,126 @@
     line-height: 1.25rem;
     letter-spacing: 0.05em;
     font-weight: 500;
+  }
+
+  .animate-hero-rise {
+    animation: hero-rise 0.9s ease-out both;
+  }
+
+  .animate-topbar-tape {
+    animation: topbar-tape 18s linear infinite;
+  }
+
+  .animate-topbar-tape:hover,
+  .animate-topbar-tape:focus-within {
+    animation-play-state: paused;
+  }
+
+  .animate-bento-float {
+    animation: bento-float 5.5s ease-in-out infinite;
+  }
+
+  .animate-how-float {
+    animation: how-float 6s ease-in-out infinite;
+  }
+
+  .animate-bento-streak {
+    animation: bento-streak 4.5s ease-in-out infinite;
+  }
+
+  .animate-bento-marquee-rtl {
+    animation: bento-marquee-rtl 30s linear infinite;
+  }
+
+  .animate-bento-marquee-ltr {
+    animation: bento-marquee-ltr 30s linear infinite;
+  }
+
+  .bento-marquee-row:hover .animate-bento-marquee-rtl,
+  .bento-marquee-row:hover .animate-bento-marquee-ltr {
+    animation-play-state: paused;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-topbar-tape,
+    .animate-bento-float,
+    .animate-how-float,
+    .animate-bento-streak,
+    .animate-bento-marquee-rtl,
+    .animate-bento-marquee-ltr {
+      animation: none;
+      transform: none;
+    }
+
+    .bento-marquee-duplicate {
+      display: none;
+    }
+  }
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes topbar-tape {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes bento-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes how-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes bento-streak {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateX(-4%);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(4%);
+  }
+}
+
+@keyframes bento-marquee-rtl {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes bento-marquee-ltr {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
   }
 }

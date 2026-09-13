@@ -26,9 +26,9 @@ const SUPPORT_CHANNELS = [
     icon: Mail,
     title: "Email",
     description:
-      "support@propify.com — pour les demandes détaillées, les vérifications de compte ou le suivi de payout.",
+      "support@propifypulse.com — pour les demandes détaillées, les vérifications de compte ou le suivi de payout.",
     action: "Envoyer un email",
-    href: "mailto:support@propify.com",
+    href: "mailto:support@propifypulse.com",
   },
   {
     icon: Phone,
