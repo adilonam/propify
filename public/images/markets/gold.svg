@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" aria-label="Gold">
+  <defs>
+    <linearGradient id="g" x1="6" y1="4" x2="26" y2="30" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFDF6B"/>
+      <stop offset="1" stop-color="#E8A812"/>
+    </linearGradient>
+  </defs>
+  <circle cx="16" cy="16" r="16" fill="url(#g)"/>
+  <!-- stacked gold bars -->
+  <g fill="#9C6E08">
+    <path d="M12.6 10.4h6.8l1.5 4.1h-9.8l1.5-4.1Z"/>
+    <path d="M7.9 16.6h6.8l1.5 4.1H6.4l1.5-4.1Z"/>
+    <path d="M17.3 16.6h6.8l1.5 4.1h-9.8l1.5-4.1Z"/>
+  </g>
+</svg>

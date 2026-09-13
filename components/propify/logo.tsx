@@ -2,7 +2,14 @@ import Image from "next/image"
 
 import { cn } from "@/lib/utils"
 
-export function Logo({ className }: { className?: string }) {
+export function Logo({
+  className,
+  tone = "default",
+}: {
+  className?: string
+  /** `inverse` for black marketing bars (white wordmark). */
+  tone?: "default" | "inverse"
+}) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <Image
@@ -13,7 +20,12 @@ export function Logo({ className }: { className?: string }) {
         className="size-9 object-contain"
         unoptimized
       />
-      <span className="font-heading text-xl font-bold tracking-tight text-on-surface">
+      <span
+        className={cn(
+          "font-heading text-xl font-bold tracking-tight",
+          tone === "inverse" ? "text-white" : "text-on-surface"
+        )}
+      >
         PROPIFY
       </span>
     </div>

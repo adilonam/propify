@@ -13,7 +13,6 @@ const PUBLIC_NAV_LINKS = [
   { sectionId: "challenges", label: "Challenges" },
   { sectionId: "dashboard", label: "Dashboard" },
   { sectionId: "confiance", label: "Confiance" },
-  { sectionId: "faq", label: "FAQ" },
   { sectionId: "contact", label: "Contact" },
 ] as const
 

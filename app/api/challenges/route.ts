@@ -3,43 +3,52 @@ import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
 export async function GET() {
-  const challengeInfos = await prisma.challengeInfo.findMany({
-    where: {
-      challenge: { isActive: true },
-    },
+  const challenges = await prisma.challenge.findMany({
+    where: { isActive: true },
     include: {
-      challenge: {
-        select: {
-          title: true,
-          accountSize: true,
-          fee: true,
-          currency: true,
-          isPopular: true,
-          isBestChoice: true,
-          isActive: true,
-          sortOrder: true,
-        },
+      challengeInfos: {
+        orderBy: { stepNumber: "asc" },
       },
     },
-    orderBy: [{ stepNumber: "asc" }, { challenge: { sortOrder: "asc" } }],
+    orderBy: { sortOrder: "asc" },
   })
 
-  const payload = challengeInfos.map((info) => ({
-    id: info.id,
-    title: info.challenge.title,
-    accountSize: info.challenge.accountSize,
-    fee: info.challenge.fee,
-    currency: info.challenge.currency,
-    stepType: info.stepNumber === 2 ? "TWO_STEP" : "ONE_STEP",
-    profitTargetPercent: info.profitTargetPercent,
-    dailyLossPercent: info.dailyLossPercent,
-    maxLossPercent: info.maxLossPercent,
-    minTradingDays: info.minTradingDays,
-    isPopular: info.challenge.isPopular,
-    isBestChoice: info.challenge.isBestChoice,
-    isActive: info.challenge.isActive,
-    sortOrder: info.challenge.sortOrder,
-  }))
+  const payload = challenges
+    .filter((challenge) => challenge.challengeInfos.length > 0)
+    .map((challenge) => {
+      const steps = challenge.challengeInfos
+      const primary = steps[0]!
+      const stepCount = steps.length
+      const stepType = stepCount >= 2 ? "TWO_STEP" : "ONE_STEP"
+
+      return {
+        // Checkout + payments use ChallengeInfo id
+        id: primary.id,
+        challengeId: challenge.id,
+        title: challenge.title,
+        accountSize: challenge.accountSize,
+        fee: String(challenge.fee),
+        currency: challenge.currency,
+        stepType,
+        stepCount,
+        profitTargetPercent: String(primary.profitTargetPercent),
+        dailyLossPercent: String(primary.dailyLossPercent),
+        maxLossPercent: String(primary.maxLossPercent),
+        minTradingDays: primary.minTradingDays,
+        isPopular: challenge.isPopular,
+        isBestChoice: challenge.isBestChoice,
+        isActive: challenge.isActive,
+        sortOrder: challenge.sortOrder,
+        steps: steps.map((step) => ({
+          id: step.id,
+          stepNumber: step.stepNumber,
+          profitTargetPercent: String(step.profitTargetPercent),
+          dailyLossPercent: String(step.dailyLossPercent),
+          maxLossPercent: String(step.maxLossPercent),
+          minTradingDays: step.minTradingDays,
+        })),
+      }
+    })
 
   return NextResponse.json(payload)
 }
