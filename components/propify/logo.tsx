@@ -22,8 +22,8 @@ export function Logo({
       />
       <span
         className={cn(
-          "font-heading text-xl font-bold tracking-tight",
-          tone === "inverse" ? "text-white" : "text-on-surface"
+          "font-heading text-xl font-bold tracking-[0.06em]",
+          tone === "inverse" ? "text-[var(--text-white)]" : "text-on-surface"
         )}
       >
         PROPIFY

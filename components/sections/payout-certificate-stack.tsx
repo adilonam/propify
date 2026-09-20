@@ -8,11 +8,11 @@ function CertificateFace({ className }: { className?: string }) {
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-[-20%] bottom-[18%] h-24 bg-[radial-gradient(ellipse_at_center,color-mix(in_srgb,var(--landing-purple)_70%,transparent),transparent_72%)] blur-md"
+        className="pointer-events-none absolute inset-x-[-20%] bottom-[18%] h-24 bg-[radial-gradient(ellipse_at_center,color-mix(in_srgb,var(--landing-glow)_70%,transparent),transparent_72%)] blur-md"
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-[28%] h-px bg-gradient-to-r from-transparent via-[var(--landing-purple)] to-transparent opacity-90"
+        className="pointer-events-none absolute inset-x-0 bottom-[28%] h-px bg-gradient-to-r from-transparent via-[var(--landing-glow)] to-transparent opacity-90"
       />
 
       <div className="relative flex h-full flex-col px-6 pb-5 pt-5 sm:px-7 sm:pb-6 sm:pt-6">
@@ -32,14 +32,14 @@ function CertificateFace({ className }: { className?: string }) {
 
         <div className="mt-8 flex flex-1 flex-col justify-center sm:mt-10">
           <p className="font-heading text-xl font-bold tracking-[0.04em] text-[var(--text-white)] sm:text-2xl">
-            PAYOUT CERTIFICATE
+            CERTIFICAT DE PAYOUT
           </p>
           <div className="mt-5 space-y-1">
-            <p className="text-xs text-[var(--text-muted)]">Émis à</p>
+            <p className="text-xs text-[var(--text-muted)]">Délivré à</p>
             <p className="text-sm font-medium text-[var(--text-white)]">Oskar L.</p>
           </div>
           <div className="mt-4 space-y-1">
-            <p className="text-xs text-[var(--text-muted)]">Montant du payout</p>
+            <p className="text-xs text-[var(--text-muted)]">Somme versée</p>
             <p className="font-heading text-3xl font-bold tracking-tight text-[var(--text-white)] sm:text-4xl">
               $18,600
             </p>
@@ -91,7 +91,7 @@ export function PayoutCertificateStack() {
     <div className="relative mx-auto aspect-[4/5] w-full max-w-[340px] sm:max-w-[380px]">
       <div
         aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 size-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--landing-purple)_28%,transparent),transparent_68%)] blur-2xl"
+        className="pointer-events-none absolute left-1/2 top-1/2 size-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,color-mix(in_srgb,var(--landing-glow)_28%,transparent),transparent_68%)] blur-2xl"
       />
 
       <FloatingCard className="absolute inset-[8%] origin-bottom rotate-[-14deg] scale-[0.92] opacity-55">

@@ -1,3 +1,5 @@
+import { Reveal } from "@/components/effects/reveal"
+
 function Stars({ className }: { className?: string }) {
   return (
     <span className={className} aria-hidden>
@@ -25,16 +27,6 @@ const PLATFORMS = [
     src: "/images/platforms/cTrader.webp",
     height: 36,
   },
-  {
-    name: "TradeLocker",
-    src: "/images/platforms/tradelocker.svg",
-    height: 28,
-  },
-  {
-    name: "Match-Trader",
-    src: "/images/platforms/match-trader.svg",
-    height: 40,
-  },
 ] as const
 
 const RATINGS = [
@@ -46,10 +38,10 @@ const RATINGS = [
     showName: true,
   },
   {
-    name: "Feefo",
-    src: "/images/ratings/feefo.svg",
+    name: "Trustpilot",
+    src: "/images/ratings/trustpilot.png",
     score: "4.9/5",
-    height: 26,
+    height: 36,
   },
   {
     name: "Myfxbook",
@@ -73,18 +65,20 @@ export function PlatformsTrustSection() {
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(ellipse_at_50%_0%,color-mix(in_srgb,var(--landing-purple)_22%,transparent),transparent_70%)]"
+        className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(ellipse_at_50%_0%,color-mix(in_srgb,var(--landing-glow)_22%,transparent),transparent_70%)]"
       />
 
       <div className="relative mx-auto flex max-w-6xl flex-col items-center gap-12 px-4 py-16 md:gap-14 md:px-8 md:py-20 lg:gap-16 lg:py-24">
-        <h2
-          id="platforms-trust-heading"
-          className="max-w-3xl text-center font-heading text-[clamp(1.75rem,4.5vw,2.75rem)] leading-tight font-bold tracking-tight text-white"
-        >
-          Tout ce qu&apos;il faut pour trader financé
-        </h2>
+        <Reveal>
+          <h2
+            id="platforms-trust-heading"
+            className="max-w-3xl text-center font-heading text-[clamp(1.75rem,4.5vw,2.75rem)] leading-tight font-bold tracking-tight text-white"
+          >
+            L&apos;essentiel pour trader avec un capital alloué
+          </h2>
+        </Reveal>
 
-        <ul className="flex w-full flex-wrap items-center justify-center gap-x-8 gap-y-8 sm:gap-x-10 md:gap-x-12 lg:gap-x-14">
+        <Reveal delay={80} as="ul" className="flex w-full flex-wrap items-center justify-center gap-x-8 gap-y-8 sm:gap-x-10 md:gap-x-12 lg:gap-x-14">
           {PLATFORMS.map((platform) => (
             <li key={platform.name} className="flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element -- local platform marks */}
@@ -97,12 +91,14 @@ export function PlatformsTrustSection() {
               />
             </li>
           ))}
-        </ul>
+        </Reveal>
 
         <ul className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
-          {RATINGS.map((rating) => (
-            <li
+          {RATINGS.map((rating, index) => (
+            <Reveal
               key={rating.name}
+              as="li"
+              delay={index * 70}
               className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-[var(--landing-border)] bg-[var(--landing-card)] px-5 py-6"
             >
               <div className="flex min-h-14 items-center justify-center gap-2">
@@ -126,7 +122,7 @@ export function PlatformsTrustSection() {
                   {rating.score}
                 </span>
               </div>
-            </li>
+            </Reveal>
           ))}
         </ul>
       </div>

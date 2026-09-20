@@ -52,36 +52,42 @@ export default function RiskWarningPage() {
         </p>
       </ContentBlock>
 
-      <div className="card space-y-8 p-8 md:p-10">
-        <h2 className="font-heading text-2xl font-bold text-on-surface">
+      <div className="space-y-8 rounded-2xl border border-[var(--landing-border)] bg-[var(--landing-card)] p-8 md:p-10">
+        <h2 className="font-heading text-2xl font-bold text-[var(--text-white)]">
           Processus en quatre étapes
         </h2>
         <ol className="grid grid-cols-1 gap-6 sm:grid-cols-2">
           {TRUST_STEPS.map((step, index) => (
             <li key={step} className="flex gap-4">
-              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary font-heading text-sm font-bold text-on-primary-container">
+              <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--primary-blue)] font-heading text-sm font-bold text-[var(--text-white)]">
                 {index + 1}
               </span>
-              <p className="text-on-surface-variant">{step}</p>
+              <p className="text-[var(--text-muted)]">{step}</p>
             </li>
           ))}
         </ol>
-        <p className="text-on-surface-variant">
+        <p className="text-[var(--text-muted)]">
           Aucune étape cachée. Aucun frais supplémentaire découvert après coup.
           Les avis sont vérifiés sur Trustpilot, où PROPIFY affiche 4.8/5 basé
           sur plus de 1 200 évaluations.
         </p>
       </div>
 
-      <div className="rounded-2xl border border-primary bg-primary/5 p-8">
-        <p className="text-on-surface-variant">
+      <div className="rounded-2xl border border-[var(--primary-blue)]/40 bg-[var(--landing-surface)] p-8">
+        <p className="text-[var(--text-muted)]">
           En continuant, vous confirmez avoir lu et compris cet avertissement.
           Pour toute question, consultez la{" "}
-          <Link href="/faq" className="text-primary hover:underline">
+          <Link
+            href="/faq"
+            className="text-[var(--primary-blue)] underline-offset-2 hover:underline"
+          >
             FAQ
           </Link>{" "}
           ou{" "}
-          <Link href="/support" className="text-primary hover:underline">
+          <Link
+            href="/support"
+            className="text-[var(--primary-blue)] underline-offset-2 hover:underline"
+          >
             contactez le support
           </Link>
           .

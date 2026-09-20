@@ -25,19 +25,19 @@ export function ChallengeCard({ challenge, badge }: ChallengeCardProps) {
 
   const specs: Array<{ label: string; value: string }> = [
     {
-      label: "Objectif de profit",
+      label: "Cible de profit",
       value: formatPercent(challenge.profitTargetPercent),
     },
     {
-      label: "Drawdown journalier",
+      label: "Perte journalière max",
       value: formatPercent(challenge.dailyLossPercent),
     },
     {
-      label: "Drawdown max",
+      label: "Perte maximale",
       value: formatPercent(challenge.maxLossPercent),
     },
     {
-      label: "Jours min. de trading",
+      label: "Jours de trading minimum",
       value: `${challenge.minTradingDays} jours`,
     },
   ]
@@ -59,12 +59,12 @@ export function ChallengeCard({ challenge, badge }: ChallengeCardProps) {
           src={productImageSrc(imageSlug)}
           alt=""
           width={1440}
-          height={632}
+          height={785}
           sizes="(max-width: 640px) 90vw, 800px"
           quality={92}
-          // Sources are already ~1440px / 30–40KB webps; skip resize+reencode softness.
+          // Full-res product PNG; skip Next resize/reencode.
           unoptimized
-          className="relative z-[1] h-[9.5rem] w-auto object-contain drop-shadow-[0_12px_40px_rgba(168,85,247,0.35)] sm:h-[11rem]"
+          className="relative z-[1] h-[9.5rem] w-auto object-contain drop-shadow-[0_12px_40px_rgba(31,143,232,0.35)] sm:h-[11rem]"
           priority={false}
         />
       </div>
@@ -105,7 +105,7 @@ export function ChallengeCard({ challenge, badge }: ChallengeCardProps) {
             onClick={() => router.push(`/checkout/${challenge.id}`)}
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3.5 font-label text-sm font-semibold text-black transition hover:bg-white/90"
           >
-            Acheter
+            Souscrire
             <ArrowUpRight className="size-4" aria-hidden />
           </button>
         </div>

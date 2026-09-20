@@ -7,7 +7,6 @@ import {
   CHALLENGE_PLATFORMS,
   type ChallengeStepType,
   formatAccountSize,
-  formatPrice,
   stepTypeLabel,
 } from "@/lib/challenges-ui"
 
@@ -87,7 +86,7 @@ export function ChallengeFilters({
   return (
     <div className="flex flex-col items-center gap-5">
       {stepTypes.length > 1 ? (
-        <PillToggle label="Évaluation">
+        <PillToggle label="Format">
           {stepTypes.map((type) => (
             <PillButton
               key={type}
@@ -103,7 +102,7 @@ export function ChallengeFilters({
       {showPlatforms ? (
         <div
           role="listbox"
-          aria-label="Plateforme de trading"
+          aria-label="Plateforme d'exécution"
           className="flex w-full max-w-3xl flex-wrap items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#0c0c10]/80 p-2 sm:gap-3 sm:p-3"
         >
           {CHALLENGE_PLATFORMS.map((platform) => {
@@ -138,11 +137,21 @@ export function ChallengeFilters({
         <div className="w-full max-w-5xl overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           <div
             role="listbox"
-            aria-label="Taille de compte"
+            aria-label="Capital du compte"
             className="mx-auto flex w-max justify-center gap-2.5 rounded-full border border-white/10 bg-[#121218] p-1 sm:gap-2"
           >
             {accountSizes.map((option) => {
               const active = accountSize === option.accountSize
+              const amount = Number(option.fee).toLocaleString("fr-FR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+              const symbol =
+                option.currency === "EUR"
+                  ? "€"
+                  : option.currency === "USD"
+                    ? "$"
+                    : option.currency
               return (
                 <button
                   key={option.accountSize}
@@ -151,22 +160,30 @@ export function ChallengeFilters({
                   aria-selected={active}
                   onClick={() => onAccountSizeChange(option.accountSize)}
                   className={cn(
-                    "flex min-w-[4.25rem] flex-col items-center rounded-full px-4 py-2 transition-colors sm:min-w-[4.75rem]",
+                    "flex min-h-16 min-w-[4.5rem] flex-col items-center justify-center gap-1.5 rounded-full px-4 py-3.5 transition-colors sm:min-w-[5rem]",
                     active
-                      ? "bg-white text-black"
-                      : "text-on-surface-variant hover:text-white"
+                      ? "border border-transparent bg-white text-black"
+                      : "border border-white/10 bg-white/[0.04] text-on-surface-variant hover:border-white/15 hover:bg-white/[0.06] hover:text-white"
                   )}
                 >
-                  <span className="font-label text-sm font-semibold leading-none">
+                  <span className="font-heading text-sm font-semibold leading-none tracking-tight">
                     {formatAccountSize(option.accountSize)}
                   </span>
                   <span
+                    aria-hidden
                     className={cn(
-                      "mt-1 font-label text-[10px] leading-none sm:text-[11px]",
+                      "h-px w-5",
+                      active ? "bg-black/20" : "bg-[var(--landing-border)]"
+                    )}
+                  />
+                  <span
+                    className={cn(
+                      "font-mono text-[10px] leading-none tabular-nums sm:text-[11px]",
                       active ? "text-black/60" : "text-on-surface-variant/80"
                     )}
                   >
-                    {formatPrice(option.fee, option.currency)}
+                    {amount}
+                    <span className="ml-0.5">{symbol}</span>
                   </span>
                 </button>
               )

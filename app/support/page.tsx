@@ -51,12 +51,15 @@ export default function SupportPage() {
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {SUPPORT_CHANNELS.map((channel) => (
-          <div key={channel.title} className="card flex flex-col space-y-4 p-8">
-            <channel.icon className="size-8 text-primary" />
-            <h2 className="font-heading text-xl font-semibold text-on-surface">
+          <div
+            key={channel.title}
+            className="flex flex-col space-y-4 rounded-2xl border border-[var(--landing-border)] bg-[var(--landing-card)] p-8"
+          >
+            <channel.icon className="size-8 text-[var(--primary-blue)]" />
+            <h2 className="font-heading text-xl font-semibold text-[var(--text-white)]">
               {channel.title}
             </h2>
-            <p className="flex-1 text-on-surface-variant">{channel.description}</p>
+            <p className="flex-1 text-[var(--text-muted)]">{channel.description}</p>
             <Link href={channel.href}>
               <Button variant="outline" className="w-full">
                 {channel.action}
@@ -69,7 +72,10 @@ export default function SupportPage() {
       <ContentBlock title="Avant de nous contacter">
         <p>
           Consultez la{" "}
-          <Link href="/faq" className="text-primary hover:underline">
+          <Link
+            href="/faq"
+            className="text-[var(--primary-blue)] underline-offset-2 hover:underline"
+          >
             FAQ
           </Link>{" "}
           pour les questions sur les comptes démo, les délais de payout et les

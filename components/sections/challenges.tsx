@@ -3,6 +3,7 @@
 import * as React from "react"
 import { ArrowRight } from "lucide-react"
 
+import { Reveal } from "@/components/effects/reveal"
 import { ChallengeCard, ChallengeCardSkeleton } from "@/components/sections/challenge-card"
 import { ChallengeFilters } from "@/components/sections/challenge-filters"
 import {
@@ -14,7 +15,11 @@ import {
   uniqueAccountSizes,
 } from "@/lib/challenges-ui"
 
-export function ChallengesSection() {
+export function ChallengesSection({
+  showBrowseLink = true,
+}: {
+  showBrowseLink?: boolean
+} = {}) {
   const [challenges, setChallenges] = React.useState<ChallengeApiItem[]>([])
   const [loading, setLoading] = React.useState(true)
   const [stepType, setStepType] = React.useState<ChallengeStepType>("TWO_STEP")
@@ -87,9 +92,9 @@ export function ChallengesSection() {
 
   return (
     <section id="challenges" className="scroll-mt-28 space-y-10">
-      <div className="space-y-8 text-center">
+      <Reveal className="space-y-8 text-center">
         <h2 className="font-heading text-4xl font-bold tracking-tight text-white md:text-5xl">
-          Choisissez votre challenge
+          Trouvez le challenge qui vous correspond
         </h2>
 
         {!loading ? (
@@ -107,40 +112,50 @@ export function ChallengesSection() {
         ) : (
           <div className="mx-auto h-28 max-w-3xl animate-pulse rounded-2xl bg-white/5" />
         )}
-      </div>
+      </Reveal>
 
       <div className={gridClass}>
         {loading
           ? Array.from({ length: 3 }).map((_, i) => (
-              <ChallengeCardSkeleton key={i} />
+              <Reveal key={i} delay={i * 80}>
+                <ChallengeCardSkeleton />
+              </Reveal>
             ))
-          : filtered.map((challenge) => (
-              <ChallengeCard
-                key={challenge.id}
-                challenge={challenge}
-                badge={badgeForChallenge(challenge, filtered)}
-              />
+          : filtered.map((challenge, index) => (
+              <Reveal key={challenge.id} delay={index * 80}>
+                <ChallengeCard
+                  challenge={challenge}
+                  badge={badgeForChallenge(challenge, filtered)}
+                />
+              </Reveal>
             ))}
       </div>
 
       {!loading && filtered.length === 0 ? (
         <p className="text-center text-on-surface-variant">
-          Aucun challenge actif pour cette sélection.{" "}
-          <a href="/challenges" className="text-primary hover:underline">
-            Voir la page challenges
-          </a>
+          Aucun challenge disponible pour ces filtres.
+          {showBrowseLink ? (
+            <>
+              {" "}
+              <a href="/challenges" className="text-primary hover:underline">
+                Parcourir la page challenges
+              </a>
+            </>
+          ) : null}
         </p>
       ) : null}
 
-      <p className="text-center">
-        <a
-          href="/challenges"
-          className="inline-flex items-center gap-2 font-label text-primary hover:underline"
-        >
-          Comparer tous les challenges
-          <ArrowRight className="size-4" />
-        </a>
-      </p>
+      {showBrowseLink ? (
+        <p className="text-center">
+          <a
+            href="/challenges"
+            className="inline-flex items-center gap-2 font-label text-primary hover:underline"
+          >
+            Parcourir tous les challenges
+            <ArrowRight className="size-4" />
+          </a>
+        </p>
+      ) : null}
     </section>
   )
 }

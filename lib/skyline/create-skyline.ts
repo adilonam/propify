@@ -117,16 +117,16 @@ const buildingFragment = /* glsl */ `
     vec3 base = mix(uColorDeep, uColorMid, ndl * 0.5 + vShade * 0.4);
     base = mix(base, uColorHi, fresnel * 0.8 + heightGlow);
     base += uColorHi * rim * 0.28;
-    base += vec3(0.62, 0.38, 1.0) * fresnel * uReflectStrength;
+    base += vec3(0.07, 0.53, 0.98) * fresnel * uReflectStrength;
 
     // Specular glints along glass folds
     vec3 h = normalize(l + normalize(vViewDir));
     float spec = pow(max(dot(n, h), 0.0), 56.0);
-    base += vec3(0.9, 0.75, 1.0) * spec * 0.75;
+    base += vec3(0.55, 0.82, 1.0) * spec * 0.75;
 
-    // Hot purple emissive at bases (feeds bloom)
-    base += vec3(0.75, 0.25, 1.15) * baseGlow * (uMirror > 0.5 ? 0.55 : 1.35);
-    base += vec3(0.45, 0.15, 0.85) * baseGlow * baseGlow * 0.8;
+    // Hot blue emissive at bases (feeds bloom)
+    base += vec3(0.12, 0.56, 0.91) * baseGlow * (uMirror > 0.5 ? 0.55 : 1.35);
+    base += vec3(0.0, 0.17, 0.37) * baseGlow * baseGlow * 0.8;
 
     gl_FragColor = vec4(base, 1.0);
   }
@@ -175,14 +175,14 @@ const floorFragment = /* glsl */ `
     float fade = 1.0 - smoothstep(3.5, 24.0, dist);
     float pulse = 0.82 + 0.18 * sin(uTime * 0.7 + dist * 0.4);
 
-    vec3 col = vec3(0.015, 0.008, 0.04);
+    vec3 col = vec3(0.004, 0.008, 0.027);
     // Mirror sheen under buildings
-    col += vec3(0.18, 0.06, 0.32) * fade * 0.55;
+    col += vec3(0.05, 0.22, 0.45) * fade * 0.55;
     col += uGridColor * grid * fade * pulse;
     // Corridor vanishing-point glow
-    col += vec3(0.42, 0.14, 0.72) * (1.0 - smoothstep(0.0, 12.0, dist)) * 0.45;
+    col += vec3(0.07, 0.53, 0.91) * (1.0 - smoothstep(0.0, 12.0, dist)) * 0.45;
     // Soft reflection wash
-    col += vec3(0.14, 0.05, 0.28) * fade * 0.5;
+    col += vec3(0.0, 0.12, 0.28) * fade * 0.5;
 
     gl_FragColor = vec4(col, 1.0);
   }
@@ -220,7 +220,7 @@ const chevronFragment = /* glsl */ `
     vec3 n = normalize(vNormal);
     float fresnel = pow(1.0 - max(dot(n, normalize(vViewDir)), 0.0), 2.0);
     vec3 col = uColor * uIntensity;
-    col += vec3(1.0, 0.88, 1.0) * fresnel * 0.9;
+    col += vec3(0.75, 0.92, 1.0) * fresnel * 0.9;
     gl_FragColor = vec4(col * 1.55, 1.0);
   }
 `
@@ -430,7 +430,7 @@ export function createSkyline(
     powerPreference: "high-performance",
   })
   const gl = renderer.gl
-  gl.clearColor(0.008, 0.004, 0.018, 1)
+  gl.clearColor(0.004, 0.008, 0.027, 1)
   container.appendChild(gl.canvas)
   Object.assign(gl.canvas.style, {
     position: "absolute",
@@ -471,13 +471,13 @@ export function createSkyline(
       fragment: buildingFragment,
       uniforms: {
         uColorDeep: {
-          value: mirror ? new Color("#140822") : new Color("#1a0833"),
+          value: mirror ? new Color("#001125") : new Color("#020a17"),
         },
         uColorMid: {
-          value: mirror ? new Color("#3d1568") : new Color("#5b1f96"),
+          value: mirror ? new Color("#0a3d6e") : new Color("#1f8fe8"),
         },
         uColorHi: {
-          value: mirror ? new Color("#7a4aa8") : new Color("#d4b0ff"),
+          value: mirror ? new Color("#12b9fb") : new Color("#8ecfff"),
         },
         uLightDir: lightDir,
         uReflectStrength: { value: mirror ? 0.3 : 0.95 },
@@ -500,7 +500,7 @@ export function createSkyline(
     vertex: floorVertex,
     fragment: floorFragment,
     uniforms: {
-      uGridColor: { value: new Color("#c084fc") },
+      uGridColor: { value: new Color("#12b9fb") },
       uTime: timeUniform,
     },
   })
@@ -514,7 +514,7 @@ export function createSkyline(
     vertex: chevronVertex,
     fragment: chevronFragment,
     uniforms: {
-      uColor: { value: new Color("#c084fc") },
+      uColor: { value: new Color("#12b9fb") },
       uIntensity: { value: 1.7 },
     },
   })
@@ -537,7 +537,7 @@ export function createSkyline(
     transparent: true,
     depthWrite: false,
     uniforms: {
-      uColor: { value: new Color("#9333ea") },
+      uColor: { value: new Color("#0086fa") },
       uIntensity: { value: 2.0 },
     },
   })
@@ -553,7 +553,7 @@ export function createSkyline(
       transparent: true,
       depthWrite: false,
       uniforms: {
-        uColor: { value: new Color("#7c3aed") },
+        uColor: { value: new Color("#1f8fe8") },
         uIntensity: { value: 1.25 },
       },
     }),
@@ -569,7 +569,7 @@ export function createSkyline(
     transparent: true,
     depthWrite: false,
     uniforms: {
-      uColor: { value: new Color("#a855f7") },
+      uColor: { value: new Color("#12b9fb") },
       uIntensity: { value: 1.1 },
     },
   })

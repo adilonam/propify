@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils"
 function MarketingCta({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <Link
-      href="/#challenges"
+      href="/challenges"
       onClick={onNavigate}
       className={cn(
         "inline-flex items-center justify-center rounded-full bg-white px-5 py-2.5",

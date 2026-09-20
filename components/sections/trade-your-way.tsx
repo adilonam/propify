@@ -1,5 +1,7 @@
 import type { ReactNode } from "react"
 
+import { Reveal } from "@/components/effects/reveal"
+
 function Stars({ size = "md" }: { size?: "sm" | "md" }) {
   const cls = size === "sm" ? "size-3" : "size-5"
   return (
@@ -17,11 +19,21 @@ function Stars({ size = "md" }: { size?: "sm" | "md" }) {
   )
 }
 
-function CardShell({ children }: { children: ReactNode }) {
+function CardShell({
+  children,
+  delay = 0,
+}: {
+  children: ReactNode
+  delay?: number
+}) {
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--landing-border)] bg-[var(--landing-card)] p-6 md:p-8">
+    <Reveal
+      as="article"
+      delay={delay}
+      className="flex h-full flex-col overflow-hidden rounded-3xl border border-[var(--landing-border)] bg-[var(--landing-card)] p-6 md:p-8"
+    >
       {children}
-    </article>
+    </Reveal>
   )
 }
 
@@ -235,72 +247,88 @@ function FuturesChart() {
   )
 }
 
-function TerminalLine({
-  prefix,
-  children,
-  prefixClass = "text-emerald-400",
+function UxMetric({
+  label,
+  value,
+  hint,
+  positive,
 }: {
-  prefix: string
-  children: ReactNode
-  prefixClass?: string
+  label: string
+  value: string
+  hint?: string
+  positive?: boolean
 }) {
   return (
-    <p className="leading-relaxed">
-      <span className={prefixClass}>{prefix}</span> {children}
-    </p>
+    <div className="rounded-xl border border-white/[0.06] bg-white/[0.03] px-3 py-2.5">
+      <p className="font-label text-[10px] tracking-wide text-[var(--text-muted)] uppercase">
+        {label}
+      </p>
+      <p
+        className={`mt-1 font-heading text-sm font-semibold sm:text-base ${
+          positive ? "text-emerald-400" : "text-white"
+        }`}
+      >
+        {value}
+      </p>
+      {hint ? (
+        <p className="mt-0.5 font-label text-[10px] text-[var(--text-muted)]">{hint}</p>
+      ) : null}
+    </div>
   )
 }
 
-function AlgoTerminal() {
+function UxDashboard() {
   return (
-    <div className="mt-6 overflow-hidden rounded-2xl border border-white/[0.08] bg-[#08060e] shadow-[0_20px_50px_rgba(0,0,0,0.45)]">
-      <div className="flex items-center gap-2 border-b border-white/[0.06] px-3 py-2.5">
-        <span className="size-2.5 rounded-full bg-[#ff5f57]" />
-        <span className="size-2.5 rounded-full bg-[#febc2e]" />
-        <span className="size-2.5 rounded-full bg-[#28c840]" />
-        <span className="ml-2 truncate font-mono text-[11px] text-white/45">
-          ~/strategies — zsh
-        </span>
+    <div className="mt-6 overflow-hidden rounded-2xl border border-white/[0.06] bg-[var(--landing-surface)]">
+      <div className="flex items-center justify-between gap-3 border-b border-white/[0.06] px-3 py-2.5 sm:px-4">
+        <div className="flex items-center gap-2">
+          <span className="size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.7)]" />
+          <span className="font-heading text-xs font-semibold text-white sm:text-sm">
+            Dashboard
+          </span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <span className="rounded-md bg-white/[0.06] px-2 py-1 font-label text-[10px] font-medium text-white/70">
+            Desktop
+          </span>
+          <span className="rounded-md border border-white/[0.08] px-2 py-1 font-label text-[10px] font-medium text-[var(--text-muted)]">
+            Mobile
+          </span>
+        </div>
       </div>
 
-      <div className="grid gap-4 p-3 font-mono text-[10px] text-white/75 sm:grid-cols-2 sm:gap-6 sm:p-4 sm:text-[11px]">
-        <div className="space-y-1">
-          <TerminalLine prefix="*" prefixClass="text-emerald-400">
-            Welcome back, Trader
-          </TerminalLine>
-          <TerminalLine prefix=">" prefixClass="text-white/40">
-            tune the EMA crossover
-          </TerminalLine>
-          <TerminalLine prefix="●" prefixClass="text-sky-400">
-            Bash(sweep.py --grid)
-          </TerminalLine>
-          <p className="pl-3 text-white/40">| 64 combos / best PF 2.3</p>
-          <TerminalLine prefix="●" prefixClass="text-sky-400">
-            Edit(ema.py)
-          </TerminalLine>
-          <TerminalLine prefix="*" prefixClass="text-amber-400">
-            Optimizing… (2s / ↑1.2k / esc)
-          </TerminalLine>
-          <p className="pt-1 text-rose-400/90">» auto mode on</p>
+      <div className="space-y-3 p-3 sm:p-4">
+        <div className="grid grid-cols-3 gap-2">
+          <UxMetric label="P&L" value="+$2,480" positive />
+          <UxMetric label="Drawdown" value="3.2%" hint="Max 10%" />
+          <UxMetric label="Win rate" value="58%" />
         </div>
-        <div className="space-y-1">
-          <TerminalLine prefix="*" prefixClass="text-emerald-400">
-            Resumed session
-          </TerminalLine>
-          <TerminalLine prefix=">" prefixClass="text-white/40">
-            2y backtest, NQ
-          </TerminalLine>
-          <TerminalLine prefix="●" prefixClass="text-sky-400">
-            Bash(fetch.py --2y)
-          </TerminalLine>
-          <p className="pl-3 text-white/40">| 504 days cached</p>
-          <TerminalLine prefix="●" prefixClass="text-sky-400">
-            Bash(backtest.py)
-          </TerminalLine>
-          <TerminalLine prefix="*" prefixClass="text-amber-400">
-            Crunching… (1s / ↑0.9k / esc)
-          </TerminalLine>
-          <p className="pt-1 text-rose-400/90">» bypass permissions on</p>
+
+        <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
+          <div className="flex items-center justify-between gap-2">
+            <p className="font-heading text-xs font-semibold text-white">
+              Challenge — Phase 1
+            </p>
+            <span className="font-label text-[10px] font-medium text-emerald-400">
+              62%
+            </span>
+          </div>
+          <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
+            <div
+              className="h-full w-[62%] rounded-full bg-emerald-400/80"
+              aria-hidden
+            />
+          </div>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {["Positions", "Historique", "Règles", "Support"].map((tab) => (
+              <span
+                key={tab}
+                className="rounded-md border border-white/[0.06] px-2 py-1 font-label text-[10px] text-[var(--text-muted)]"
+              >
+                {tab}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </div>
@@ -318,7 +346,7 @@ function TrustVisual() {
           <Stars />
         </div>
         <p className="mt-2 font-label text-xs text-[var(--text-muted)] sm:text-sm">
-          Avis vérifiés — Feefo, Google &amp; Myfxbook
+          Retours authentifiés — Feefo, Google &amp; Myfxbook
         </p>
       </div>
 
@@ -352,7 +380,7 @@ function TrustVisual() {
         </div>
 
         <p className="mt-3 text-sm leading-relaxed text-white/80">
-          Passed the two-step in nine days.
+          Évaluation en deux étapes validée en neuf jours.
         </p>
 
         <div className="mt-3 flex items-center justify-between gap-2">
@@ -361,7 +389,7 @@ function TrustVisual() {
             <svg viewBox="0 0 16 16" className="size-3 fill-current" aria-hidden>
               <path d="M6.5 11.2L3.3 8l1.1-1.1 2.1 2.1 5.1-5.1L12.7 5l-6.2 6.2z" />
             </svg>
-            Verified
+            Vérifié
           </span>
         </div>
       </div>
@@ -376,52 +404,58 @@ export function TradeYourWaySection() {
       className="relative overflow-hidden border-t border-[var(--landing-border-subtle)] bg-[var(--landing-bg)]"
     >
       <div className="relative mx-auto max-w-6xl px-4 py-16 md:px-8 md:py-20 lg:py-24">
-        <h2
-          id="trade-your-way-heading"
-          className="mb-10 text-center font-heading text-[clamp(1.75rem,4.5vw,2.75rem)] leading-tight font-bold tracking-tight text-white md:mb-14"
-        >
-          Tradez à votre façon
-        </h2>
+        <Reveal>
+          <h2
+            id="trade-your-way-heading"
+            className="mb-10 text-center font-heading text-[clamp(1.75rem,4.5vw,2.75rem)] leading-tight font-bold tracking-tight text-white md:mb-14"
+          >
+            Tradez selon vos règles
+          </h2>
+        </Reveal>
 
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 lg:gap-6">
-          <CardShell>
+          <CardShell delay={0}>
             <h3 className="font-heading text-xl font-bold tracking-tight text-white md:text-2xl">
               CFDs
             </h3>
             <p className="mt-2 max-w-md text-sm leading-relaxed text-[var(--text-muted)] md:text-[0.95rem]">
-              Prenez position long ou short sur 1&nbsp;300+ instruments — forex, crypto,
-              indices, matières premières et actions — avec des spreads institutionnels, sur
-              notre capital.
+              Ouvrez des positions long ou short sur 1&nbsp;300+ instruments — forex, crypto,
+              indices, matières premières et actions — avec des spreads de niveau
+              institutionnel, sur le capital Propify.
             </p>
             <CfdsVisual />
           </CardShell>
 
-          <CardShell>
+          <CardShell delay={80}>
             <h3 className="font-heading text-xl font-bold tracking-tight text-white md:text-2xl">
               Futures
             </h3>
             <p className="mt-2 max-w-md text-sm leading-relaxed text-[var(--text-muted)] md:text-[0.95rem]">
-              Contrats standardisés sur indices, matières premières et crypto. Les prix
-              suivent la liquidité réelle des exchanges, pas le book d&apos;un market maker.
-              Long ou short, overnight et le week-end.
+              Contrats normalisés sur indices, matières premières et crypto. Les cours
+              collent à la liquidité des exchanges, pas au carnet d&apos;un market maker.
+              Long ou short, overnight comme le week-end.
             </p>
             <FuturesChart />
           </CardShell>
 
-          <CardShell>
+          <CardShell delay={0}>
             <h3 className="font-heading text-xl font-bold tracking-tight text-white md:text-2xl">
-              Apportez votre agent ou algo
-            </h3>
-            <AlgoTerminal />
-          </CardShell>
-
-          <CardShell>
-            <h3 className="font-heading text-xl font-bold tracking-tight text-white md:text-2xl">
-              La confiance des traders financés
+              Une interface limpide, faite pour trader
             </h3>
             <p className="mt-2 max-w-md text-sm leading-relaxed text-[var(--text-muted)] md:text-[0.95rem]">
-              Avis réels et vérifiés de traders financés — sur Feefo, Google et Myfxbook,
-              jamais sélectionnés à la carte.
+              Tableau de bord clair, parcours épuré, finitions soignées — desktop et
+              mobile. Prise en main rapide, et une équipe support prête quand il le faut.
+            </p>
+            <UxDashboard />
+          </CardShell>
+
+          <CardShell delay={80}>
+            <h3 className="font-heading text-xl font-bold tracking-tight text-white md:text-2xl">
+              La preuve vient des traders financés
+            </h3>
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-[var(--text-muted)] md:text-[0.95rem]">
+              Témoignages authentiques de traders financés — publiés sur Feefo, Google et
+              Myfxbook, sans sélection à la carte.
             </p>
             <TrustVisual />
           </CardShell>

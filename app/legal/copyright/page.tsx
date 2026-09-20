@@ -53,18 +53,27 @@ export default function CopyrightPage() {
         <p>
           Pour toute demande relative aux droits d&apos;auteur ou à
           l&apos;utilisation de la marque, contactez{" "}
-          <a href="mailto:legal@propify.com" className="text-primary hover:underline">
+          <a
+            href="mailto:legal@propify.com"
+            className="text-[var(--primary-blue)] underline-offset-2 hover:underline"
+          >
             legal@propify.com
           </a>
           .
         </p>
         <p>
           Consultez également nos{" "}
-          <Link href="/legal/terms" className="text-primary hover:underline">
+          <Link
+            href="/legal/terms"
+            className="text-[var(--primary-blue)] underline-offset-2 hover:underline"
+          >
             conditions d&apos;utilisation
           </Link>{" "}
           et notre{" "}
-          <Link href="/legal/privacy" className="text-primary hover:underline">
+          <Link
+            href="/legal/privacy"
+            className="text-[var(--primary-blue)] underline-offset-2 hover:underline"
+          >
             politique de confidentialité
           </Link>
           .

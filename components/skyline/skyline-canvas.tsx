@@ -110,7 +110,7 @@ export function SkylineCanvas({
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 70% 50% at 50% 70%, rgba(124,58,237,0.45), transparent 60%), radial-gradient(ellipse 50% 40% at 50% 100%, rgba(88,28,135,0.5), transparent 55%), var(--landing-bg)",
+              "radial-gradient(ellipse 70% 50% at 50% 70%, rgba(31,143,232,0.45), transparent 60%), radial-gradient(ellipse 50% 40% at 50% 100%, rgba(0,17,37,0.7), transparent 55%), var(--landing-bg)",
           }}
         />
       ) : null}
