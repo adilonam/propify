@@ -1,21 +1,23 @@
+import { Reveal } from "@/components/effects/reveal"
+
 const OFFICES = [
   {
     city: "Dubai",
     country: "United Arab Emirates",
-    badge: "Siège",
-    src: "/images/about/dubai.webp",
+    badge: "Quartier général",
+    src: "/images/about/dubai.jpeg",
   },
   {
-    city: "Prague",
-    country: "Czech Republic",
-    badge: "Bureau Europe",
-    src: "/images/about/prague.webp",
+    city: "New York",
+    country: "United States",
+    badge: "Antenne US",
+    src: "/images/about/newyork.jpeg",
   },
   {
     city: "Miami",
     country: "United States",
-    badge: "Bureau US",
-    src: "/images/about/miami.webp",
+    badge: "Antenne US",
+    src: "/images/about/miami.png",
   },
 ] as const
 
@@ -26,27 +28,32 @@ export function GlobalTeamSection() {
       className="border-t border-[var(--landing-border-subtle)] bg-[var(--landing-bg)]"
     >
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-10 px-4 py-16 md:gap-14 md:px-8 md:py-20 lg:py-24">
-        <div className="max-w-2xl text-center">
+        <Reveal className="max-w-2xl text-center">
           <h2
             id="global-team-heading"
             className="font-heading text-[clamp(1.75rem,4.5vw,2.75rem)] leading-tight font-bold tracking-tight text-white"
           >
-            Une équipe mondiale
+            Présents là où les marchés tournent
           </h2>
           <p className="mt-4 text-base leading-relaxed text-[var(--text-muted)] md:text-lg">
-            Une équipe senior répartie sur trois fuseaux — marchés, risque,
-            ingénierie et support 24&nbsp;h/24, entièrement en interne.
+            Des profils seniors sur trois fuseaux horaires — trading, risque,
+            ingénierie et assistance 24&nbsp;h/24, entièrement internalisés.
           </p>
-        </div>
+        </Reveal>
 
         <ul className="grid w-full grid-cols-1 gap-4 sm:gap-5 md:grid-cols-3 md:gap-6">
-          {OFFICES.map((office) => (
-            <li key={office.city} className="group relative">
+          {OFFICES.map((office, index) => (
+            <Reveal
+              key={office.city}
+              as="li"
+              delay={index * 90}
+              className="group relative"
+            >
               <article className="relative aspect-[3/4] overflow-hidden rounded-[1.5rem] md:rounded-[2rem]">
                 {/* eslint-disable-next-line @next/next/no-img-element -- local office photos */}
                 <img
                   src={office.src}
-                  alt={`Bureau Propify — ${office.city}`}
+                  alt={`Propify — ${office.city}`}
                   className="absolute inset-0 size-full object-cover transition duration-500 ease-out group-hover:scale-[1.03] group-hover:brightness-110"
                   loading="lazy"
                 />
@@ -66,7 +73,7 @@ export function GlobalTeamSection() {
                   </p>
                 </div>
               </article>
-            </li>
+            </Reveal>
           ))}
         </ul>
       </div>

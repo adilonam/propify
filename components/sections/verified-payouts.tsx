@@ -2,6 +2,8 @@ import type { ReactNode } from "react"
 import Image from "next/image"
 import Link from "next/link"
 
+import { Reveal } from "@/components/effects/reveal"
+
 const PAYOUTS = [
   { name: "Marco R.", amount: "$4,850", country: "Italie", flag: "it" },
   { name: "Joon-ho L.", amount: "$6,300", country: "Corée du Sud", flag: "kr" },
@@ -13,24 +15,6 @@ const PAYOUTS = [
   { name: "Sofia G.", amount: "$4,180", country: "Espagne", flag: "es" },
 ] as const
 
-const VIDEOS = [
-  {
-    id: "38Wi5pgBwKs",
-    headline: "ÇA A CHANGÉ\nMON TRADING",
-    trader: "Runhai",
-  },
-  {
-    id: "COKt2BR2oYM",
-    headline: "LA DISCIPLINE\nMÈNE AU SUCCÈS",
-    trader: "Shaqueel",
-  },
-  {
-    id: "FfA9ySEhuY8",
-    headline: "TRADEZ L'OR\nSOYEZ PAYÉ",
-    trader: "Glaferd",
-  },
-] as const
-
 const ACTIVITIES = [
   {
     name: "Thiago A.",
@@ -38,7 +22,7 @@ const ACTIVITIES = [
     price: "$559",
     country: "Brésil",
     flag: "br",
-    thumb: "/images/products/oracle.webp",
+    thumb: "/images/products/oracle.png",
     ago: "il y a 17 min",
   },
   {
@@ -56,7 +40,7 @@ const ACTIVITIES = [
     price: "$449",
     country: "Japon",
     flag: "jp",
-    thumb: "/images/products/vanguard.webp",
+    thumb: "/images/products/vencor.png",
     ago: "il y a 31 min",
   },
   {
@@ -111,7 +95,7 @@ function PayoutCard({
     <article className="relative flex w-[min(100%,22rem)] shrink-0 items-center justify-between gap-4 overflow-hidden rounded-2xl border border-[var(--landing-border)] bg-[var(--landing-card)] px-5 py-4 sm:w-[24rem] sm:px-6 sm:py-5">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-4 bottom-0 h-10 bg-[radial-gradient(ellipse_at_center,color-mix(in_srgb,var(--landing-purple)_55%,transparent),transparent_70%)] blur-md"
+        className="pointer-events-none absolute inset-x-4 bottom-0 h-10 bg-[radial-gradient(ellipse_at_center,color-mix(in_srgb,var(--landing-glow)_55%,transparent),transparent_70%)] blur-md"
       />
       <div className="relative min-w-0 space-y-1">
         <p className="truncate text-sm text-[var(--text-muted)]">{name}</p>
@@ -127,7 +111,7 @@ function PayoutCard({
         href="#how-it-works"
         className="relative max-w-[7.5rem] shrink-0 rounded-md border border-white/35 px-2.5 py-2 text-center font-label text-[0.6rem] leading-snug font-bold tracking-wide text-[var(--text-white)] uppercase transition hover:border-white/60 hover:bg-white/5 sm:max-w-[8.5rem] sm:px-3 sm:text-[0.65rem]"
       >
-        Voir le certificat
+        Afficher le certificat
       </Link>
     </article>
   )
@@ -146,12 +130,12 @@ function ActivityCard({
     <article className="relative flex w-[min(100%,20rem)] shrink-0 items-center gap-3 overflow-hidden rounded-2xl border border-[var(--landing-border)] bg-[var(--landing-card)] px-4 py-3 sm:w-[22rem] sm:gap-4 sm:px-5">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-3 bottom-0 h-8 bg-[radial-gradient(ellipse_at_center,color-mix(in_srgb,var(--landing-purple)_40%,transparent),transparent_70%)] blur-md"
+        className="pointer-events-none absolute inset-x-3 bottom-0 h-8 bg-[radial-gradient(ellipse_at_center,color-mix(in_srgb,var(--landing-glow)_40%,transparent),transparent_70%)] blur-md"
       />
       <div className="relative min-w-0 flex-1 space-y-1">
         <p className="truncate text-sm text-[var(--text-white)]">
           <span className="text-[var(--text-muted)]">{name}</span>{" "}
-          a acheté{" "}
+          a souscrit{" "}
           <span className="font-medium text-teal-300">{product}</span> pour{" "}
           {price}
         </p>
@@ -218,63 +202,6 @@ function MarqueeRow({
   )
 }
 
-function VideoCard({ id, headline, trader }: (typeof VIDEOS)[number]) {
-  return (
-    <a
-      href={`https://www.youtube.com/watch?v=${id}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group relative aspect-[16/10] overflow-hidden rounded-2xl border border-[var(--landing-border)] bg-[var(--landing-card)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--landing-purple)]"
-    >
-      {/* eslint-disable-next-line @next/next/no-img-element -- local YouTube thumbs */}
-      <img
-        src={`/images/youtube/${id}.jpg`}
-        alt=""
-        className="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-[1.03] group-hover:brightness-110"
-        loading="lazy"
-      />
-      <div
-        aria-hidden
-        className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/25"
-      />
-
-      <div className="absolute left-4 top-4 flex items-center gap-1.5 sm:left-5 sm:top-5">
-        <Image
-          src="/images/logo.png"
-          alt=""
-          width={22}
-          height={22}
-          className="size-5 object-contain sm:size-6"
-          unoptimized
-        />
-        <span className="font-heading text-xs font-bold tracking-tight text-white sm:text-sm">
-          PROPIFY
-        </span>
-      </div>
-
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="flex size-12 items-center justify-center rounded-full bg-white text-black shadow-lg transition group-hover:scale-105 sm:size-14">
-          <svg
-            aria-hidden
-            viewBox="0 0 24 24"
-            className="ml-0.5 size-5 fill-current sm:size-6"
-          >
-            <path d="M8 5.5v13l11-6.5-11-6.5Z" />
-          </svg>
-          <span className="sr-only">Lire la vidéo de {trader}</span>
-        </span>
-      </div>
-
-      <div className="absolute inset-x-0 bottom-0 space-y-2 p-4 sm:p-5">
-        <p className="font-heading text-lg font-bold leading-tight tracking-wide whitespace-pre-line text-white uppercase sm:text-xl md:text-2xl">
-          {headline}
-        </p>
-        <p className="text-sm text-white/80">{trader}</p>
-      </div>
-    </a>
-  )
-}
-
 export function VerifiedPayoutsSection() {
   return (
     <section
@@ -283,23 +210,23 @@ export function VerifiedPayoutsSection() {
       className="relative overflow-hidden border-t border-[var(--landing-border-subtle)] bg-[var(--landing-bg)]"
     >
       <div className="mx-auto flex max-w-7xl flex-col gap-10 px-0 py-16 md:gap-14 md:py-24 lg:py-28">
-        <div className="mx-auto max-w-3xl px-4 text-center md:px-8">
+        <Reveal className="mx-auto max-w-3xl px-4 text-center md:px-8">
           <h2
             id="verified-payouts-heading"
             className="font-heading text-[clamp(1.75rem,4.5vw,3rem)] leading-tight font-bold tracking-tight text-[var(--text-white)]"
           >
-            Plus de 10,5&nbsp;M$+ en payouts vérifiés
+            Plus de 10,5&nbsp;M$ de gains versés et attestés
           </h2>
           <p className="mt-4 text-base leading-relaxed text-[var(--text-muted)] md:text-lg">
-            Ce que le trading financé avec Propify a vraiment à offrir.
+            Voici concrètement ce que le trading financé chez Propify change.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="space-y-6 md:space-y-8">
+        <Reveal delay={100} className="space-y-6 md:space-y-8">
           <MarqueeRow
             direction="rtl"
             durationSec={42}
-            label="Payouts récents"
+            label="Versements récents"
             renderItems={(keyPrefix) =>
               PAYOUTS.map((payout) => (
                 <PayoutCard
@@ -310,16 +237,10 @@ export function VerifiedPayoutsSection() {
             }
           />
 
-          <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-4 sm:grid-cols-3 sm:gap-5 md:px-8">
-            {VIDEOS.map((video) => (
-              <VideoCard key={video.id} {...video} />
-            ))}
-          </div>
-
           <MarqueeRow
             direction="ltr"
             durationSec={48}
-            label="Activité récente"
+            label="Dernières activités"
             renderItems={(keyPrefix) =>
               ACTIVITIES.map((activity) => (
                 <ActivityCard
@@ -329,7 +250,7 @@ export function VerifiedPayoutsSection() {
               ))
             }
           />
-        </div>
+        </Reveal>
       </div>
     </section>
   )

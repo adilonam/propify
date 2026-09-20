@@ -20,16 +20,16 @@ export default function ClassementPage() {
         description="Plus de 2 500 traders à travers l'Europe ont déjà franchi ce pas. Pas parce qu'ils cherchaient un raccourci, mais parce qu'ils avaient la stratégie et manquaient du capital pour l'exploiter vraiment."
       />
 
-      <div className="card overflow-hidden">
-        <div className="border-b border-outline-variant px-6 py-4">
-          <h2 className="font-heading text-xl font-bold text-on-surface">
+      <div className="overflow-hidden rounded-2xl border border-[var(--landing-border)] bg-[var(--landing-card)]">
+        <div className="border-b border-[var(--landing-border-subtle)] px-6 py-4">
+          <h2 className="font-heading text-xl font-bold text-[var(--text-white)]">
             Top performers — cette semaine
           </h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full min-w-[640px] text-left">
             <thead>
-              <tr className="border-b border-outline-variant font-label text-xs text-on-surface-variant uppercase">
+              <tr className="border-b border-[var(--landing-border-subtle)] font-label text-xs text-[var(--text-muted)] uppercase">
                 <th className="px-6 py-4">Rang</th>
                 <th className="px-6 py-4">Trader</th>
                 <th className="px-6 py-4">Pays</th>
@@ -41,19 +41,19 @@ export default function ClassementPage() {
               {LEADERBOARD.map((entry) => (
                 <tr
                   key={entry.rank}
-                  className="border-b border-outline-variant/60 last:border-0"
+                  className="border-b border-[var(--landing-border-subtle)] last:border-0"
                 >
-                  <td className="px-6 py-4 font-heading text-lg font-bold text-primary">
+                  <td className="px-6 py-4 font-heading text-lg font-bold text-[var(--primary-blue)]">
                     #{entry.rank}
                   </td>
-                  <td className="px-6 py-4 text-on-surface">{entry.trader}</td>
-                  <td className="px-6 py-4 font-label text-sm text-on-surface-variant">
+                  <td className="px-6 py-4 text-[var(--text-white)]">{entry.trader}</td>
+                  <td className="px-6 py-4 font-label text-sm text-[var(--text-muted)]">
                     {entry.country}
                   </td>
-                  <td className="px-6 py-4 font-label text-secondary-fixed">
+                  <td className="px-6 py-4 font-label text-[var(--success-green)]">
                     {entry.profit}
                   </td>
-                  <td className="px-6 py-4 font-heading font-semibold text-on-surface">
+                  <td className="px-6 py-4 font-heading font-semibold text-[var(--text-white)]">
                     {entry.payout}
                   </td>
                 </tr>
@@ -65,14 +65,17 @@ export default function ClassementPage() {
 
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {KEY_STATS.map((stat) => (
-          <div key={stat.label} className="card space-y-3 p-6">
-            <div className="font-heading text-2xl font-bold text-on-surface">
+          <div
+            key={stat.label}
+            className="space-y-3 rounded-2xl border border-[var(--landing-border)] bg-[var(--landing-card)] p-6"
+          >
+            <div className="font-heading text-2xl font-bold text-[var(--text-white)]">
               {stat.value}
             </div>
-            <div className="font-label text-xs text-on-surface-variant uppercase">
+            <div className="font-label text-xs text-[var(--text-muted)] uppercase">
               {stat.label}
             </div>
-            <p className="text-sm text-on-surface-variant">{stat.description}</p>
+            <p className="text-sm text-[var(--text-muted)]">{stat.description}</p>
           </div>
         ))}
       </div>

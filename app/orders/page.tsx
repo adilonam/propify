@@ -128,7 +128,7 @@ export default function OrdersPage() {
             <p className="text-on-surface-variant">
               Vous n&apos;avez pas encore de challenge.
             </p>
-            <Link href="/#challenges">
+            <Link href="/challenges">
               <Button>Choisir un challenge</Button>
             </Link>
           </div>

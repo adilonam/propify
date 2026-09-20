@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 
 /**
- * Soft purple pointer glow mounted once in the root layout.
+ * Soft blue pointer glow mounted once in the root layout.
  * Hidden for reduced-motion and coarse (touch) pointers.
  */
 export function CursorGlow() {
@@ -70,7 +70,7 @@ export function CursorGlow() {
       className="pointer-events-none fixed top-0 left-0 z-[9999] h-[420px] w-[420px] will-change-transform"
       style={{
         background:
-          "radial-gradient(circle, color-mix(in srgb, var(--landing-purple) 28%, transparent) 0%, color-mix(in srgb, var(--landing-purple-deep) 14%, transparent) 38%, transparent 70%)",
+          "radial-gradient(circle, color-mix(in srgb, var(--landing-glow) 28%, transparent) 0%, color-mix(in srgb, var(--landing-glow-deep) 14%, transparent) 38%, transparent 70%)",
         transform: "translate3d(-9999px, -9999px, 0) translate(-50%, -50%)",
       }}
     />

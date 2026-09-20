@@ -2,11 +2,28 @@ import { NextRequest, NextResponse } from "next/server"
 import { z } from "zod"
 
 import { auth } from "@/auth"
+import { computeCheckoutTotal } from "@/lib/checkout"
 import { prisma } from "@/lib/prisma"
 import { getWhopClient, getWhopCompanyId, isWhopConfigured, logWhopError } from "@/lib/whop"
 
 const bodySchema = z.object({
   challengeId: z.string().min(1),
+  selectedAddonIds: z.array(z.string()).optional(),
+  platformId: z.string().optional(),
+  optionId: z.string().optional(),
+  billing: z
+    .object({
+      email: z.string().email().optional(),
+      firstName: z.string().optional(),
+      lastName: z.string().optional(),
+      phone: z.string().optional(),
+      address: z.string().optional(),
+      city: z.string().optional(),
+      state: z.string().optional(),
+      postalCode: z.string().optional(),
+      country: z.string().optional(),
+    })
+    .optional(),
 })
 
 export async function POST(req: NextRequest) {
@@ -24,7 +41,8 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 })
   }
 
-  const { challengeId } = parsed.data
+  const { challengeId, selectedAddonIds, platformId, optionId, billing } =
+    parsed.data
 
   const challengeInfo = await prisma.challengeInfo.findUnique({
     where: { id: challengeId },
@@ -45,19 +63,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Challenge not found" }, { status: 404 })
   }
 
+  const baseFee = Number(challengeInfo.challenge.fee)
+  const pricing = computeCheckoutTotal(baseFee, selectedAddonIds ?? [])
+  const priceAmount = pricing.total
+  const amountCents = Math.round(priceAmount * 100)
+
   const order = await prisma.order.create({
     data: {
       userId: session.user.id,
       challengeId: challengeInfo.challenge.id,
       stepNumber: challengeInfo.stepNumber,
-      amountCents: Math.round(Number(challengeInfo.challenge.fee) * 100),
+      amountCents,
       currency: challengeInfo.challenge.currency,
       status: "PENDING",
     },
   })
 
   const baseUrl = process.env.AUTH_URL ?? "http://localhost:3000"
-  const priceAmount = Number(challengeInfo.challenge.fee)
   const currency = challengeInfo.challenge.currency.toLowerCase()
   const title = `${challengeInfo.challenge.title} ${challengeInfo.challenge.accountSize} - Step ${challengeInfo.stepNumber}`
   const returnUrl = `${baseUrl}/checkout/${challengeId}?orderId=${order.id}`
@@ -79,6 +101,11 @@ export async function POST(req: NextRequest) {
         order_id: order.id,
         challenge_id: challengeInfo.challenge.id,
         user_id: session.user.id,
+        addon_percent_total: String(pricing.addonPercentTotal),
+        selected_addon_ids: (selectedAddonIds ?? []).join(","),
+        platform_id: platformId ?? "",
+        option_id: optionId ?? "",
+        billing_email: billing?.email ?? session.user.email ?? "",
       },
       redirect_url: returnUrl,
     })

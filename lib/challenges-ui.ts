@@ -56,11 +56,6 @@ export const CHALLENGE_PLATFORMS = [
     src: "/images/platforms/tradelocker.svg",
   },
   {
-    id: "match-trader",
-    name: "Match-Trader",
-    src: "/images/platforms/match-trader.svg",
-  },
-  {
     id: "ctrader",
     name: "cTrader",
     src: "/images/platforms/cTrader.webp",
@@ -139,6 +134,8 @@ export function productImageForChallenge(
 }
 
 export function productImageSrc(slug: ProductImageSlug): string {
+  if (slug === "oracle") return "/images/products/oracle.png"
+  if (slug === "vanguard") return "/images/products/vencor.png"
   return `/images/products/${slug}.webp`
 }
 
@@ -159,27 +156,27 @@ export function badgeForChallenge(
   const art = productImageForChallenge(challenge.accountSize)
 
   if (art === "oracle") {
-    return { label: "Le plus abordable", tone: "yellow" }
+    return { label: "Tarif le plus bas", tone: "yellow" }
   }
   if (art === "vanguard") {
-    return { label: "Payout plus élevé", tone: "yellow" }
+    return { label: "Part de gains renforcée", tone: "yellow" }
   }
   if (art === "ember" && hasNoDailyDrawdown(challenge)) {
-    return { label: "Sans drawdown journalier", tone: "yellow" }
+    return { label: "Sans limite de perte journalière", tone: "yellow" }
   }
 
   if (challenge.isBestChoice) {
-    return { label: "Meilleur choix", tone: "yellow" }
+    return { label: "Coup de cœur", tone: "yellow" }
   }
   if (challenge.isPopular) {
-    return { label: "Populaire", tone: "yellow" }
+    return { label: "Très demandé", tone: "yellow" }
   }
   if (among.length > 1) {
     const cheapest = among.reduce((min, c) =>
       Number(c.fee) < Number(min.fee) ? c : min
     )
     if (cheapest.id === challenge.id) {
-      return { label: "Le plus abordable", tone: "yellow" }
+      return { label: "Tarif le plus bas", tone: "yellow" }
     }
   }
   return null

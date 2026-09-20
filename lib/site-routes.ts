@@ -1,27 +1,20 @@
-export const FOOTER_SOCIAL = [
-  {
-    label: "Discord",
-    href: "/discord",
-    network: "discord" as const,
-  },
-] as const
-
 export const FOOTER_SUPPORT = {
-  headline: "Support 24/7",
+  headline: "Assistance continue",
   email: "support@propifypulse.com",
   emailHref: "mailto:support@propifypulse.com",
   pageHref: "/support",
-  pageLabel: "Centre d'aide",
+  pageLabel: "Espace d'aide",
 } as const
 
 export const FOOTER_LINKS = {
   "Comment ça marche": [
     { label: "Challenges", href: "/challenges" },
     { label: "FAQ", href: "/faq" },
-    { label: "Comment ça marche", href: "/#confiance" },
+    { label: "À propos", href: "/a-propos" },
+    { label: "Le parcours", href: "/#confiance" },
   ],
   Entreprise: [
-    { label: "Support", href: "/support" },
+    { label: "Assistance", href: "/support" },
     { label: "Discord", href: "/discord" },
     { label: "Classement", href: "/classement" },
     { label: "Dashboard", href: "/dashboard" },
